@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow gradient-text">Kubernetes, made understandable</p>
+    <h1><span class="gradient-text">Demystify</span> the cluster with Unkubed.</h1>
+    <p>
+      Inspect namespaces, pods, deployments, and services while seeing the exact
+      <code>kubectl</code> commands and YAML at every step. Unkubed connects UI actions to the reality of your cluster.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Get started</a>
+      <a class="btn btn-ghost" href="{{ url_for('main.features') }}">Explore features</a>
+    </div>
+  </div>
+  <div class="hero-media">
+    <div class="screenshot-frame">
+      <img src="{{ url_for('static', filename='img/dashboard-placeholder.svg') }}" alt="Dashboard preview" />
+    </div>
+  </div>
+</section>
+
+<section class="card-grid">
+  <div class="card">
+    <h3>YAML generators</h3>
+    <p>Quick-start deployments, services, and config maps complete with matching <code>kubectl apply</code> snippets.</p>
+  </div>
+  <div class="card">
+    <h3>Safe cluster connects</h3>
+    <p>Attach to a kubeconfig + context and stay read-focused while recording the exact commands that power the view.</p>
+  </div>
+  <div class="card">
+    <h3>Troubleshooting hints</h3>
+    <p>Decode events and logs from pods into concise summaries that suggest the next observation to make.</p>
+  </div>
+  <div class="card">
+    <h3>Educational flywheel</h3>
+    <p>For every action, Unkubed surfaces the UI component, the YAML manifest, the <code>kubectl</code> command, and the cluster evidence side-by-side.</p>
+  </div>
+</section>
+
+<section>
+  <h2 class="gradient-text">See Unkubed in action</h2>
+  <div class="screenshot-grid">
+    <div class="screenshot-frame">
+      <img src="{{ url_for('static', filename='img/pod-detail-placeholder.svg') }}" alt="Pod detail screenshot" />
+    </div>
+    <div class="screenshot-frame">
+      <img src="{{ url_for('static', filename='img/templates-placeholder.svg') }}" alt="Template builder screenshot" />
+    </div>
+  </div>
+</section>
+{% endblock %}
