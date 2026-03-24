@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: unkubed
+      POSTGRES_USER: unkubed
+      POSTGRES_PASSWORD: unkubed
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unkubed"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://unkubed:unkubed@postgres:5432/unkubed
+      APP_ENV: production
+      FLASK_APP: unkubed:create_app
+      PORT: 5173
+      HOST_HOME_PATH: ${HOME}
+      KUBECONFIG: /home/appuser/.kube/config-docker
+      KUBECONFIG_SOURCE_PATH: /home/appuser/.kube/config
+      KUBECONFIG_DERIVED_PATH: /home/appuser/.kube/config-docker
+      KUBECONFIG_CLUSTER_NAME: minikube
+      KUBECONFIG_BRIDGE_IP: ${MINIKUBE_BRIDGE_IP:-192.168.49.2}
+      KUBECONFIG_BRIDGE_PORT: 8443
+    ports:
+      - "5173:5173"
+    volumes:
+      - ${HOME}/.kube:/home/appuser/.kube:rw
+      - ${HOME}/.kube:${HOME}/.kube:ro
+      - ${HOME}/.minikube:/home/appuser/.minikube:ro
+      - ${HOME}/.minikube:${HOME}/.minikube:ro
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
