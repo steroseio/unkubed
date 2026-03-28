@@ -1,52 +1,146 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% set phase = pod.status.phase or "Unknown" %}
 <h2>Pod: {{ pod.metadata.name }}</h2>
-<div class="split">
-  <div class="card">
-    <h3>Status</h3>
-    <p>Namespace: {{ pod.metadata.namespace }}</p>
-    <p>Phase: {{ pod.status.phase }}</p>
-    <p>Node: {{ pod.spec.nodeName }}</p>
-    <h4>Containers</h4>
-    <ul>
-      {% for c in pod.status.containerStatuses %}
-      <li>
-        {{ c.name }} — restarts {{ c.restartCount }}
-        {% if c.state.waiting %} ({{ c.state.waiting.reason }}) {% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-    <h4>Summary</h4>
-    <p>{{ summary.summary }}</p>
-    <h4>Suggested next steps</h4>
-    <ul>
-      {% for step in summary.next_steps %}
-      <li>{{ step }}</li>
-      {% endfor %}
-    </ul>
+<div class="pod-detail-layout">
+  <div class="pod-detail-stack">
+    <section class="card pod-detail-card">
+      <div class="pod-detail-heading">
+        <div>
+          <p class="eyebrow">Status</p>
+          <h3>Workload snapshot</h3>
+        </div>
+        <span class="phase-badge phase-{{ phase|lower|replace(' ', '-') }}">{{ phase }}</span>
+      </div>
+      <div class="pod-info-grid">
+        <div class="pod-info-item">
+          <span class="pod-info-label">Namespace</span>
+          <strong>{{ pod.metadata.namespace }}</strong>
+        </div>
+        <div class="pod-info-item">
+          <span class="pod-info-label">Node</span>
+          <strong>{{ pod.spec.nodeName or "Unscheduled" }}</strong>
+        </div>
+        <div class="pod-info-item">
+          <span class="pod-info-label">Pod IP</span>
+          <strong>{{ pod.status.podIP or "Pending" }}</strong>
+        </div>
+        <div class="pod-info-item">
+          <span class="pod-info-label">Restart policy</span>
+          <strong>{{ pod.spec.restartPolicy or "Default" }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="card pod-detail-card">
+      <p class="eyebrow">Containers</p>
+      <h3>Runtime signals</h3>
+      <div class="pod-container-list">
+        {% for c in pod.status.containerStatuses or [] %}
+        <article class="pod-container-item">
+          <div class="pod-container-header">
+            <strong>{{ c.name }}</strong>
+            <span class="phase-badge phase-{{ 'running' if c.ready else 'pending' }}">
+              {{ "Ready" if c.ready else "Not ready" }}
+            </span>
+          </div>
+          <p>Restarts: {{ c.restartCount }}</p>
+          {% if c.state.waiting %}
+          <p>Waiting reason: {{ c.state.waiting.reason }}</p>
+          {% elif c.state.terminated %}
+          <p>Last state: terminated (exit {{ c.state.terminated.exitCode }})</p>
+          {% elif c.state.running %}
+          <p>Running since: {{ c.state.running.startedAt }}</p>
+          {% endif %}
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="card pod-detail-card">
+      <p class="eyebrow">Troubleshooting</p>
+      <h3>Summary</h3>
+      <div class="pod-summary-callout">
+        {{ summary.summary }}
+      </div>
+      {% if summary.evidence %}
+      <h4>Evidence</h4>
+      <ul class="pod-detail-list">
+        {% for item in summary.evidence %}
+        <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      <h4>Suggested next steps</h4>
+      <ul class="pod-detail-list">
+        {% for step in summary.next_steps %}
+        <li>{{ step }}</li>
+        {% endfor %}
+      </ul>
+    </section>
   </div>
 
-  <div>
-    <h3>Recent events</h3>
-    <div class="code-block">
-      Command: {{ commands.events }}
-    </div>
-    <ul>
-      {% for event in events %}
-      <li>
-        <strong>{{ event.reason }}</strong> — {{ event.message }} ({{ event.lastTimestamp }})
-      </li>
-      {% endfor %}
-    </ul>
-    <h3>Logs</h3>
-    <div class="code-block">
-      Command: {{ commands.logs }}
-    </div>
-    <pre class="code-block">{{ logs }}</pre>
+  <div class="pod-detail-stack">
+    <section class="terminal-window">
+      <div class="terminal-toolbar">
+        <div class="terminal-dots">
+          <span class="terminal-dot terminal-dot-close"></span>
+          <span class="terminal-dot terminal-dot-minimize"></span>
+          <span class="terminal-dot terminal-dot-maximize"></span>
+        </div>
+        <div class="terminal-title">Recent events</div>
+        <div class="terminal-status is-success">{{ events|length }} events</div>
+      </div>
+      <div class="terminal-body">
+        <pre class="terminal-line"><span class="terminal-prompt">kubectl $</span> {{ commands.events }}</pre>
+        {% if events %}
+        <div class="pod-event-list">
+          {% for event in events %}
+          <article class="pod-event-item">
+            <div class="pod-event-header">
+              <strong>{{ event.reason }}</strong>
+              <span>{{ event.lastTimestamp or event.eventTime or "Unknown time" }}</span>
+            </div>
+            <p>{{ event.message }}</p>
+          </article>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="terminal-empty">No recent events were returned for this pod.</div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section class="terminal-window">
+      <div class="terminal-toolbar">
+        <div class="terminal-dots">
+          <span class="terminal-dot terminal-dot-close"></span>
+          <span class="terminal-dot terminal-dot-minimize"></span>
+          <span class="terminal-dot terminal-dot-maximize"></span>
+        </div>
+        <div class="terminal-title">Logs</div>
+        <div class="terminal-status is-success">tail 80</div>
+      </div>
+      <div class="terminal-body">
+        <pre class="terminal-line"><span class="terminal-prompt">kubectl $</span> {{ commands.logs }}</pre>
+        <pre class="terminal-output">{{ logs }}</pre>
+      </div>
+    </section>
   </div>
 </div>
-<div class="code-block">
-  Command: {{ commands.pod }}
-</div>
+<section class="terminal-window terminal-window-compact">
+  <div class="terminal-toolbar">
+    <div class="terminal-dots">
+      <span class="terminal-dot terminal-dot-close"></span>
+      <span class="terminal-dot terminal-dot-minimize"></span>
+      <span class="terminal-dot terminal-dot-maximize"></span>
+    </div>
+    <div class="terminal-title">Pod inspection command</div>
+    <div class="terminal-status is-success">get</div>
+  </div>
+  <div class="terminal-body">
+    <pre class="terminal-line"><span class="terminal-prompt">kubectl $</span> {{ commands.pod }}</pre>
+  </div>
+</section>
 {% endblock %}
