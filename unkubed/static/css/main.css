@@ -486,6 +486,10 @@ tr:last-child td {
   margin-top: 0.55rem;
 }
 
+.pod-detail-list + h4 {
+  margin-top: 1.4rem;
+}
+
 @media (max-width: 900px) {
   .pod-detail-layout {
     grid-template-columns: 1fr;
