@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Connect to a cluster</h2>
+<div class="split">
+  <div class="card">
+    <h3>New connection</h3>
+    <form method="post">
+      {{ form.hidden_tag() }}
+      <div>
+        {{ form.nickname.label }} {{ form.nickname() }}
+        {% for error in form.nickname.errors %}
+        <small class="text-error">{{ error }}</small>
+        {% endfor %}
+      </div>
+      <div>
+        {{ form.kubeconfig_path.label }} {{ form.kubeconfig_path() }}
+        {% for error in form.kubeconfig_path.errors %}
+        <small class="text-error">{{ error }}</small>
+        {% endfor %}
+      </div>
+      {% if contexts %}
+      <div>
+        {{ form.context_name.label }} {{ form.context_name() }}
+        {% for error in form.context_name.errors %}
+        <small class="text-error">{{ error }}</small>
+        {% endfor %}
+      </div>
+      <p class="text-muted">Need a different context? Enter it below manually.</p>
+      {% else %}
+      <p class="text-error">No contexts were detected at the provided kubeconfig path. Enter a context manually below.</p>
+      {% endif %}
+      <div>
+        {{ form.manual_context.label }} {{ form.manual_context() }}
+        {% for error in form.manual_context.errors %}
+        <small class="text-error">{{ error }}</small>
+        {% endfor %}
+      </div>
+      {{ form.submit(class="btn btn-primary") }}
+    </form>
+  </div>
+  <div>
+    <h3>Saved clusters</h3>
+    {% if clusters %}
+    <ul class="cluster-list">
+      {% for cluster in clusters %}
+      <li class="cluster-list-item">
+        <div>
+          <strong>{{ cluster.nickname }}</strong> — {{ cluster.context_name }}
+          {% if active_cluster and cluster.id == active_cluster.id %}
+          <span class="badge">Active</span>
+          {% endif %}
+        </div>
+        <div class="cluster-actions">
+          {% if not (active_cluster and cluster.id == active_cluster.id) %}
+          <form method="post" action="{{ url_for('clusters.activate', cluster_id=cluster.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-ghost" type="submit">Activate</button>
+          </form>
+          {% endif %}
+          <form method="post" action="{{ url_for('clusters.delete', cluster_id=cluster.id) }}" onsubmit="return confirm('Delete {{ cluster.nickname }}?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-danger" type="submit">Delete</button>
+          </form>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No clusters stored yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

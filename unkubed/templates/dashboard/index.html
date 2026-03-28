@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Cluster dashboard</h2>
+{% if not cluster %}
+<div class="card">
+  <p>Connect a cluster to populate the dashboard.</p>
+  <a class="btn btn-primary" href="{{ url_for('clusters.configure') }}">Connect cluster</a>
+</div>
+{% else %}
+<div class="card-grid">
+  <div class="card">
+    <h3>Namespaces</h3>
+    <p class="stat">{{ namespaces | length }}</p>
+    <div class="code-block">{{ commands.namespaces }}</div>
+  </div>
+  <div class="card">
+    <h3>Pods</h3>
+    <p class="stat">{{ pods | length }}</p>
+    <div class="code-block">{{ commands.pods }}</div>
+  </div>
+  <div class="card">
+    <h3>Deployments</h3>
+    <p class="stat">{{ deployments | length }}</p>
+    <div class="code-block">{{ commands.deployments }}</div>
+  </div>
+  <div class="card">
+    <h3>Services</h3>
+    <p class="stat">{{ services | length }}</p>
+    <div class="code-block">{{ commands.services }}</div>
+  </div>
+</div>
+
+<h3>Recent commands</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Status</th>
+      <th>When</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for record in recent_commands %}
+    <tr>
+      <td><code>{{ record.command }}</code></td>
+      <td>{{ "✅" if record.success else "⚠️" }}</td>
+      <td>{{ record.executed_at }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>New {{ resource_type }} template</h2>
+<div class="split">
+  <div class="card">
+    <form method="post">
+      {{ form.hidden_tag() }}
+      <div>
+        {{ form.name.label }} {{ form.name() }}
+        {% for error in form.name.errors %}
+        <small class="text-error">{{ error }}</small>
+        {% endfor %}
+      </div>
+      <div>
+        {{ form.namespace.label }} {{ form.namespace() }}
+      </div>
+      {% if resource_type != "configmap" %}
+      <div>
+        {{ form.image.label }} {{ form.image() }}
+      </div>
+      <div>
+        {{ form.replicas.label }} {{ form.replicas() }}
+      </div>
+      <div>
+        {{ form.container_port.label }} {{ form.container_port() }}
+      </div>
+      {% endif %}
+      {% if resource_type in ["service"] %}
+      <div>
+        {{ form.service_type.label }} {{ form.service_type() }}
+      </div>
+      <div>
+        {{ form.service_port.label }} {{ form.service_port() }}
+      </div>
+      <div>
+        {{ form.target_port.label }} {{ form.target_port() }}
+      </div>
+      {% endif %}
+      {% if resource_type == "configmap" %}
+      <div>
+        {{ form.config_data.label }} {{ form.config_data(rows=5) }}
+      </div>
+      {% endif %}
+      <div>
+        {{ form.save_template() }} Save to library
+      </div>
+      {{ form.submit(class="btn btn-primary") }}
+    </form>
+  </div>
+  <div>
+    {% if manifest %}
+    <h3>Generated YAML</h3>
+    <pre class="code-block">{{ manifest }}</pre>
+    <p>Command: <code>{{ command }}</code></p>
+    {% else %}
+    <p>Fill in the form to generate YAML.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

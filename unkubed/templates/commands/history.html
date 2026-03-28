@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Command history</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Cluster</th>
+      <th>Result</th>
+      <th>Executed</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for record in records %}
+    <tr>
+      <td><code>{{ record.command }}</code></td>
+      <td>{{ record.cluster.nickname if record.cluster else "-" }}</td>
+      <td>{{ "success" if record.success else "failed" }}</td>
+      <td>{{ record.executed_at }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

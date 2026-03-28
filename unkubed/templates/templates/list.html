@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Saved templates</h2>
+<div class="hero-actions">
+  <a class="btn btn-primary" href="{{ url_for('templates.new_template', resource_type='deployment') }}">New deployment</a>
+  <a class="btn btn-ghost" href="{{ url_for('templates.new_template', resource_type='service') }}">New service</a>
+  <a class="btn btn-ghost" href="{{ url_for('templates.new_template', resource_type='configmap') }}">New configmap</a>
+</div>
+{% if templates %}
+  <div class="card-grid">
+    {% for template in templates %}
+    <div class="card">
+      <h3>{{ template.name }} ({{ template.resource_type }})</h3>
+      <pre class="code-block">{{ template.content }}</pre>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No templates saved yet.</p>
+{% endif %}
+{% endblock %}
