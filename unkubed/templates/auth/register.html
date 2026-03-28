@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>Create an account</h2>
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <div>
+      {{ form.full_name.label }} {{ form.full_name() }}
+      {% for error in form.full_name.errors %}
+      <small class="text-error">{{ error }}</small>
+      {% endfor %}
+    </div>
+    <div>
+      {{ form.email.label }} {{ form.email() }}
+      {% for error in form.email.errors %}
+      <small class="text-error">{{ error }}</small>
+      {% endfor %}
+    </div>
+    <div>
+      {{ form.password.label }} {{ form.password() }}
+      {% for error in form.password.errors %}
+      <small class="text-error">{{ error }}</small>
+      {% endfor %}
+    </div>
+    <div>
+      {{ form.confirm_password.label }} {{ form.confirm_password() }}
+      {% for error in form.confirm_password.errors %}
+      <small class="text-error">{{ error }}</small>
+      {% endfor %}
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+  </form>
+  <p>Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a>.</p>
+</div>
+{% endblock %}
