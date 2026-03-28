@@ -165,36 +165,98 @@ nav a.active {
 }
 
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.9rem;
   padding: 0.85rem 1.5rem;
-  border-radius: 14px;
-  border: none;
+  border-radius: 999px;
+  border: 1px solid transparent;
   cursor: pointer;
-  font-weight: 600;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease,
+    border-color 0.15s ease, color 0.15s ease;
 }
 
 .btn-primary {
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   color: #fff;
-  box-shadow: 0 8px 18px rgba(51, 78, 104, 0.16);
+  border-color: rgba(51, 78, 104, 0.14);
+  box-shadow: 0 8px 18px rgba(51, 78, 104, 0.14);
 }
 
 .btn-ghost {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.52);
   color: var(--text-primary);
   border: 1px solid var(--border);
 }
 
 .btn-run {
-  background: linear-gradient(135deg, #0f172a, #1d4ed8);
+  background: linear-gradient(135deg, #34516d, #27445d);
   color: #f8fbff;
-  box-shadow: 0 14px 28px rgba(29, 78, 216, 0.24);
+  border-color: rgba(39, 68, 93, 0.16);
+  box-shadow: 0 8px 18px rgba(39, 68, 93, 0.16);
+}
+
+.btn-danger {
+  background: rgba(185, 28, 28, 0.08);
+  color: #991b1b;
+  border-color: rgba(185, 28, 28, 0.16);
+}
+
+.btn:hover:not(:disabled),
+.resource-action-link:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 12px 22px rgba(51, 78, 104, 0.18);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(79, 109, 143, 0.08);
+  border-color: rgba(79, 109, 143, 0.16);
+}
+
+.btn-run:hover:not(:disabled) {
+  box-shadow: 0 12px 22px rgba(39, 68, 93, 0.18);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: rgba(185, 28, 28, 0.12);
+}
+
+.btn:focus-visible,
+.resource-action-link:focus-visible {
+  outline: 2px solid rgba(79, 109, 143, 0.38);
+  outline-offset: 3px;
 }
 
 .btn:disabled {
   cursor: not-allowed;
   opacity: 0.55;
   box-shadow: none;
+}
+
+[data-theme="dark"] .btn-ghost {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .btn-ghost:hover:not(:disabled) {
+  background: rgba(136, 164, 195, 0.1);
+  border-color: rgba(136, 164, 195, 0.2);
+}
+
+[data-theme="dark"] .btn-danger {
+  color: #fecaca;
+  border-color: rgba(248, 113, 113, 0.2);
+  background: rgba(127, 29, 29, 0.22);
+}
+
+[data-theme="dark"] .btn-danger:hover:not(:disabled) {
+  background: rgba(153, 27, 27, 0.28);
 }
 
 .card-grid {
@@ -299,22 +361,41 @@ tr:last-child td {
   font-weight: 700;
 }
 
+.resource-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: rgba(79, 109, 143, 0.12);
+  border: 1px solid rgba(79, 109, 143, 0.16);
+}
+
+.resource-inline-code {
+  display: inline-block;
+  margin: 0.15rem 0.35rem 0.15rem 0;
+}
+
 .resource-action-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.45rem 0.9rem;
+  min-height: 2.4rem;
+  padding: 0.45rem 0.95rem;
   border-radius: 999px;
   font-weight: 700;
   color: #f8fbff;
-  background: linear-gradient(135deg, #0f172a, #2563eb);
-  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.22);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  background: linear-gradient(135deg, #34516d, #27445d);
+  border: 1px solid rgba(39, 68, 93, 0.16);
+  box-shadow: 0 8px 18px rgba(39, 68, 93, 0.16);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease,
+    background 0.15s ease, border-color 0.15s ease;
 }
 
 .resource-action-link:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 26px rgba(37, 99, 235, 0.28);
+  box-shadow: 0 12px 22px rgba(39, 68, 93, 0.18);
 }
 
 .phase-badge {
@@ -358,6 +439,11 @@ tr:last-child td {
 
 [data-theme="dark"] .resource-table tbody tr:hover {
   background: rgba(96, 165, 250, 0.08);
+}
+
+[data-theme="dark"] .resource-pill {
+  background: rgba(136, 164, 195, 0.14);
+  border-color: rgba(136, 164, 195, 0.18);
 }
 
 [data-theme="dark"] .phase-running {

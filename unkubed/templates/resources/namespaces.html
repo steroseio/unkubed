@@ -3,7 +3,7 @@
 {% block content %}
 <h2>Namespaces</h2>
 <div class="code-block">{{ command }}</div>
-<table>
+<table class="resource-table">
   <thead>
     <tr>
       <th>Name</th>
@@ -14,8 +14,12 @@
   <tbody>
     {% for ns in namespaces %}
     <tr>
-      <td>{{ ns.metadata.name }}</td>
-      <td>{{ ns.status.phase }}</td>
+      <td class="resource-name">{{ ns.metadata.name }}</td>
+      <td>
+        <span class="phase-badge phase-{{ (ns.status.phase or 'Unknown')|lower|replace(' ', '-') }}">
+          {{ ns.status.phase or "Unknown" }}
+        </span>
+      </td>
       <td>{{ ns.metadata.creationTimestamp }}</td>
     </tr>
     {% endfor %}

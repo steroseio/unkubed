@@ -3,7 +3,7 @@
 {% block content %}
 <h2>Deployments {% if selected_namespace %}({{ selected_namespace }}){% endif %}</h2>
 <div class="code-block">{{ command }}</div>
-<table>
+<table class="resource-table">
   <thead>
     <tr>
       <th>Name</th>
@@ -15,12 +15,16 @@
   <tbody>
     {% for dep in deployments %}
     <tr>
-      <td>{{ dep.metadata.name }}</td>
+      <td class="resource-name">{{ dep.metadata.name }}</td>
       <td>{{ dep.metadata.namespace }}</td>
-      <td>{{ dep.status.readyReplicas }}/{{ dep.spec.replicas }}</td>
+      <td>
+        <span class="resource-pill">
+          {{ dep.status.readyReplicas or 0 }}/{{ dep.spec.replicas }}
+        </span>
+      </td>
       <td>
         {% for container in dep.spec.template.spec.containers %}
-        <code>{{ container.image }}</code>
+        <code class="resource-inline-code">{{ container.image }}</code>
         {% endfor %}
       </td>
     </tr>

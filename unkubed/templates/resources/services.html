@@ -3,7 +3,7 @@
 {% block content %}
 <h2>Services {% if selected_namespace %}({{ selected_namespace }}){% endif %}</h2>
 <div class="code-block">{{ command }}</div>
-<table>
+<table class="resource-table">
   <thead>
     <tr>
       <th>Name</th>
@@ -15,12 +15,12 @@
   <tbody>
     {% for svc in services %}
     <tr>
-      <td>{{ svc.metadata.name }}</td>
-      <td>{{ svc.spec.type }}</td>
-      <td>{{ svc.spec.clusterIP }}</td>
+      <td class="resource-name">{{ svc.metadata.name }}</td>
+      <td><span class="resource-pill">{{ svc.spec.type }}</span></td>
+      <td><code class="resource-inline-code">{{ svc.spec.clusterIP }}</code></td>
       <td>
         {% for port in svc.spec.ports %}
-        <code>{{ port.port }} -> {{ port.targetPort }}</code>
+        <code class="resource-inline-code">{{ port.port }} -> {{ port.targetPort }}</code>
         {% endfor %}
       </td>
     </tr>
