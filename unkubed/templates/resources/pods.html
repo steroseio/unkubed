@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Pods {% if selected_namespace %}({{ selected_namespace }}){% endif %}</h2>
+<div class="code-block">{{ command }}</div>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Namespace</th>
+      <th>Phase</th>
+      <th>Restarts</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for pod in pods %}
+    <tr>
+      <td>{{ pod.metadata.name }}</td>
+      <td>{{ pod.metadata.namespace }}</td>
+      <td>{{ pod.status.phase }}</td>
+      {% set counts = namespace(total=0) %}
+      {% for c in pod.status.containerStatuses or [] %}
+        {% set counts.total = counts.total + c.restartCount %}
+      {% endfor %}
+      <td>{{ counts.total }}</td>
+      <td><a href="{{ url_for('resources.pod_detail', namespace=pod.metadata.namespace, pod_name=pod.metadata.name) }}">Inspect</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

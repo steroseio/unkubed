@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="features-hero">
+  <p class="eyebrow gradient-text">Unkubed capabilities</p>
+  <h1><span class="gradient-text">Features that map UI to kubectl</span></h1>
+  <p>Every screen is designed to teach Kubernetes fundamentals through clear visuals, gradients inspired by the cluster nebula, and annotated screenshots.</p>
+</section>
+
+<section class="features-section">
+  <div class="feature-grid">
+    <div class="feature-card">
+      <i class="mdi mdi-view-dashboard"></i>
+      <h3>Contextual dashboard</h3>
+      <p>A single glance shows namespaces, workloads, services, and the exact <code>kubectl get</code> commands that populate them.</p>
+      <div class="screenshot-frame">
+        <img src="{{ url_for('static', filename='img/dashboard-placeholder.svg') }}" alt="Dashboard screenshot" />
+      </div>
+    </div>
+    <div class="feature-card">
+      <i class="mdi mdi-file-code-outline"></i>
+      <h3>Template studio</h3>
+      <p>Generate deployment, service, and config map YAML with smart defaults, preview the manifest, and see the matching apply workflow.</p>
+      <div class="screenshot-frame">
+        <img src="{{ url_for('static', filename='img/templates-placeholder.svg') }}" alt="Template screenshot" />
+      </div>
+    </div>
+    <div class="feature-card">
+      <i class="mdi mdi-heart-pulse"></i>
+      <h3>Pod health insights</h3>
+      <p>Combine events, logs, and restart counts into gradient-highlighted diagnostics that suggest the next command or probe to inspect.</p>
+      <div class="screenshot-frame">
+        <img src="{{ url_for('static', filename='img/pod-detail-placeholder.svg') }}" alt="Pod detail screenshot" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features-section">
+  <div class="feature-grid">
+    <div class="feature-card">
+      <i class="mdi mdi-history"></i>
+      <h3>Command history</h3>
+      <p>Unkubed stores the gradient-highlighted commands you triggered along with success status and timestamps for future study.</p>
+    </div>
+    <div class="feature-card">
+      <i class="mdi mdi-account-key"></i>
+      <h3>Safe cluster connections</h3>
+      <p>Read-only flows grounded in your kubeconfig ensure clarity without risking a production cluster.</p>
+    </div>
+    <div class="feature-card">
+      <i class="mdi mdi-weather-night"></i>
+      <h3>Sunset-aware theming</h3>
+      <p>Automatic light-to-dark transitions follow local sunset times, keeping late-night study sessions comfortable.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

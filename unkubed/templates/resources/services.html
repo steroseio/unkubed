@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Services {% if selected_namespace %}({{ selected_namespace }}){% endif %}</h2>
+<div class="code-block">{{ command }}</div>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Cluster IP</th>
+      <th>Ports</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for svc in services %}
+    <tr>
+      <td>{{ svc.metadata.name }}</td>
+      <td>{{ svc.spec.type }}</td>
+      <td>{{ svc.spec.clusterIP }}</td>
+      <td>
+        {% for port in svc.spec.ports %}
+        <code>{{ port.port }} -> {{ port.targetPort }}</code>
+        {% endfor %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
