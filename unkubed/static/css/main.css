@@ -5,9 +5,9 @@
   --bg-secondary: #ffffff;
   --text-primary: #0f1328;
   --text-muted: #4d4f70;
-  --accent: #b266ff;
-  --accent-strong: #7c3aed;
-  --accent-soft: rgba(178, 102, 255, 0.15);
+  --accent: #4f6d8f;
+  --accent-strong: #334e68;
+  --accent-soft: rgba(79, 109, 143, 0.14);
   --border: rgba(12, 15, 35, 0.12);
   --card-shadow: 0 25px 45px rgba(14, 19, 45, 0.12);
   --gradient: linear-gradient(120deg, #60a5fa, #a855f7, #f472b6);
@@ -28,9 +28,9 @@
   --bg-secondary: #0e0c1f;
   --text-primary: #f9fafc;
   --text-muted: #cdd5f5;
-  --accent: #c084fc;
-  --accent-strong: #8b5cf6;
-  --accent-soft: rgba(192, 132, 252, 0.15);
+  --accent: #88a4c3;
+  --accent-strong: #5f7c9f;
+  --accent-soft: rgba(136, 164, 195, 0.16);
   --border: rgba(255, 255, 255, 0.1);
   --card-shadow: 0 25px 45px rgba(13, 5, 25, 0.45);
   --gradient: linear-gradient(120deg, #60a5fa, #a855f7, #f472b6);
@@ -174,9 +174,9 @@ nav a.active {
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   color: #fff;
-  box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 8px 18px rgba(51, 78, 104, 0.16);
 }
 
 .btn-ghost {
