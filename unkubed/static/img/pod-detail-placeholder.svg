@@ -1,0 +1,15 @@
+<svg width="800" height="480" viewBox="0 0 800 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="480" rx="32" fill="#0B0B19"/>
+  <rect x="32" y="32" width="736" height="64" rx="16" fill="#120F25"/>
+  <text x="56" y="74" fill="#c084fc" font-family="Inter" font-size="24" font-weight="600">Pod detail — crashloop insight</text>
+  <rect x="32" y="120" width="360" height="312" rx="20" fill="#120F25"/>
+  <rect x="408" y="120" width="360" height="146" rx="20" fill="#120F25"/>
+  <rect x="408" y="282" width="360" height="150" rx="20" fill="#120F25"/>
+  <text x="56" y="160" fill="#f3f4ff" font-family="Inter" font-size="18">Status</text>
+  <text x="56" y="188" fill="#cdd5f5" font-family="Inter" font-size="16">Phase: CrashLoopBackOff</text>
+  <text x="56" y="216" fill="#cdd5f5" font-family="Inter" font-size="16">Restarts: 7</text>
+  <text x="432" y="160" fill="#f3f4ff" font-family="Inter" font-size="18">Events</text>
+  <text x="432" y="204" fill="#cdd5f5" font-family="Inter" font-size="15">Warning  Unhealthy  Readiness probe failed</text>
+  <text x="432" y="320" fill="#f3f4ff" font-family="Inter" font-size="18">Logs</text>
+  <text x="432" y="356" fill="#cdd5f5" font-family="JetBrains Mono" font-size="14">kubectl logs pod-x -n demo</text>
+</svg>

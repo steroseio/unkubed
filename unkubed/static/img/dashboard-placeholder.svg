@@ -1,0 +1,20 @@
+<svg width="800" height="480" viewBox="0 0 800 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="480" rx="32" fill="#0B0B19"/>
+  <rect x="32" y="32" width="736" height="64" rx="16" fill="url(#grad)" opacity="0.25"/>
+  <rect x="32" y="120" width="220" height="120" rx="20" fill="#120F25"/>
+  <rect x="278" y="120" width="220" height="120" rx="20" fill="#120F25"/>
+  <rect x="524" y="120" width="220" height="120" rx="20" fill="#120F25"/>
+  <rect x="32" y="268" width="712" height="160" rx="20" fill="#120F25"/>
+  <text x="64" y="92" fill="#c084fc" font-family="Inter" font-size="28" font-weight="600">Cluster snapshot</text>
+  <text x="56" y="172" fill="#f3f4ff" font-family="Inter" font-size="20">Namespaces</text>
+  <text x="302" y="172" fill="#f3f4ff" font-family="Inter" font-size="20">Pods</text>
+  <text x="548" y="172" fill="#f3f4ff" font-family="Inter" font-size="20">Services</text>
+  <text x="56" y="316" fill="#cdd5f5" font-family="JetBrains Mono" font-size="16">kubectl get pods -A</text>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="800" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#60A5FA"/>
+      <stop offset="0.5" stop-color="#A855F7"/>
+      <stop offset="1" stop-color="#F472B6"/>
+    </linearGradient>
+  </defs>
+</svg>

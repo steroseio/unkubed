@@ -1,0 +1,14 @@
+<svg width="800" height="480" viewBox="0 0 800 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="480" rx="32" fill="#0B0B19"/>
+  <text x="56" y="80" fill="#c084fc" font-family="Inter" font-size="26" font-weight="600">Deployment template</text>
+  <rect x="48" y="110" width="704" height="320" rx="20" fill="#120F25"/>
+  <text x="72" y="150" fill="#f3f4ff" font-family="JetBrains Mono" font-size="16">apiVersion: apps/v1</text>
+  <text x="72" y="176" fill="#f3f4ff" font-family="JetBrains Mono" font-size="16">kind: Deployment</text>
+  <text x="72" y="202" fill="#cdd5f5" font-family="JetBrains Mono" font-size="16">metadata:</text>
+  <text x="100" y="226" fill="#cdd5f5" font-family="JetBrains Mono" font-size="16">name: web</text>
+  <text x="100" y="250" fill="#cdd5f5" font-family="JetBrains Mono" font-size="16">labels:</text>
+  <text x="128" y="274" fill="#cdd5f5" font-family="JetBrains Mono" font-size="16">app: web</text>
+  <text x="72" y="320" fill="#cdd5f5" font-family="JetBrains Mono" font-size="16">spec:</text>
+  <text x="100" y="344" fill="#cdd5f5" font-family="JetBrains Mono" font-size="16">replicas: 3</text>
+  <text x="100" y="368" fill="#cdd5f5" font-family="JetBrains Mono" font-size="16">template:</text>
+</svg>
