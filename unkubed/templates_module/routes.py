@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from flask import Blueprint, abort, flash, render_template
+from flask import Blueprint, abort, flash, render_template, request
 from flask_login import current_user, login_required
 
 from ..extensions import db
@@ -54,6 +54,8 @@ def new_template(resource_type: str):
             db.session.add(saved)
             db.session.commit()
             flash("Template saved.", "success")
+    elif request.method == "POST":
+        flash("Template generation failed. Check the highlighted form fields.", "warning")
 
     return render_template(
         "templates/new.html",

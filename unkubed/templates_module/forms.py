@@ -18,6 +18,8 @@ class TemplateForm(FlaskForm):
     service_type = SelectField(
         "Service Type",
         choices=[("ClusterIP", "ClusterIP"), ("NodePort", "NodePort"), ("LoadBalancer", "LoadBalancer")],
+        validators=[Optional()],
+        validate_choice=False,
     )
     service_port = IntegerField(
         "Service Port", validators=[Optional(), NumberRange(min=1, max=65535)], default=80

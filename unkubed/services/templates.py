@@ -27,7 +27,7 @@ class TemplateBuilder:
                         "containers": [
                             {
                                 "name": payload["name"],
-                                "image": payload.get("image", "nginx:latest"),
+                                "image": payload.get("image") or "nginx:latest",
                                 "ports": [
                                     {
                                         "containerPort": int(
@@ -53,7 +53,7 @@ class TemplateBuilder:
                 "namespace": payload.get("namespace", "default"),
             },
             "spec": {
-                "type": payload.get("service_type", "ClusterIP"),
+                "type": payload.get("service_type") or "ClusterIP",
                 "selector": {"app": payload.get("selector", payload["name"])},
                 "ports": [
                     {

@@ -32,23 +32,42 @@
 </div>
 
 <h3>Recent commands</h3>
-<table>
-  <thead>
-    <tr>
-      <th>Command</th>
-      <th>Status</th>
-      <th>When</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for record in recent_commands %}
-    <tr>
-      <td><code>{{ record.command }}</code></td>
-      <td>{{ "✅" if record.success else "⚠️" }}</td>
-      <td>{{ record.executed_at }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% if recent_commands %}
+<div class="terminal-stack">
+  {% for record in recent_commands %}
+  <section class="terminal-window terminal-window-compact">
+    <div class="terminal-toolbar">
+      <div class="terminal-dots">
+        <span class="terminal-dot terminal-dot-close"></span>
+        <span class="terminal-dot terminal-dot-minimize"></span>
+        <span class="terminal-dot terminal-dot-maximize"></span>
+      </div>
+      <div class="terminal-title">{{ record.description or "kubectl command" }}</div>
+      <div class="terminal-status {{ 'is-success' if record.success else 'is-failed' }}">
+        {{ "success" if record.success else "failed" }}
+      </div>
+    </div>
+    <div class="terminal-body">
+      <div class="terminal-meta">
+        <span>{{ record.executed_at }}</span>
+        <span>{{ record.cluster.nickname if record.cluster else "No cluster" }}</span>
+      </div>
+      <pre class="terminal-line"><span class="terminal-prompt">kubectl $</span> {{ record.command }}</pre>
+      {% set preview = record.stderr or record.stdout %}
+      {% if preview %}
+      <details class="terminal-details">
+        <summary class="terminal-summary">View output preview</summary>
+        <pre class="terminal-output">{{ preview }}</pre>
+      </details>
+      {% endif %}
+    </div>
+  </section>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card">
+  <p>No commands recorded yet. Browse the cluster to start building command history.</p>
+</div>
+{% endif %}
 {% endif %}
 {% endblock %}

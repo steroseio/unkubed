@@ -2,24 +2,50 @@
 
 {% block content %}
 <h2>Command history</h2>
-<table>
-  <thead>
-    <tr>
-      <th>Command</th>
-      <th>Cluster</th>
-      <th>Result</th>
-      <th>Executed</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for record in records %}
-    <tr>
-      <td><code>{{ record.command }}</code></td>
-      <td>{{ record.cluster.nickname if record.cluster else "-" }}</td>
-      <td>{{ "success" if record.success else "failed" }}</td>
-      <td>{{ record.executed_at }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% if records %}
+<div class="terminal-stack">
+  {% for record in records %}
+  <section class="terminal-window">
+    <div class="terminal-toolbar">
+      <div class="terminal-dots">
+        <span class="terminal-dot terminal-dot-close"></span>
+        <span class="terminal-dot terminal-dot-minimize"></span>
+        <span class="terminal-dot terminal-dot-maximize"></span>
+      </div>
+      <div class="terminal-title">{{ record.description or "kubectl command" }}</div>
+      <div class="terminal-status {{ 'is-success' if record.success else 'is-failed' }}">
+        {{ "success" if record.success else "failed" }}
+      </div>
+    </div>
+    <div class="terminal-body">
+      <div class="terminal-meta">
+        <span>{{ record.executed_at }}</span>
+        <span>{{ record.cluster.nickname if record.cluster else "No cluster" }}</span>
+        <span>exit {{ record.exit_code if record.exit_code is not none else "-" }}</span>
+      </div>
+      <pre class="terminal-line"><span class="terminal-prompt">kubectl $</span> {{ record.command }}</pre>
+      {% if record.stdout %}
+      <details class="terminal-details">
+        <summary class="terminal-summary">stdout</summary>
+        <pre class="terminal-output">{{ record.stdout }}</pre>
+      </details>
+      {% endif %}
+      {% if record.stderr %}
+      <details class="terminal-details">
+        <summary class="terminal-summary">stderr</summary>
+        <pre class="terminal-output terminal-output-error">{{ record.stderr }}</pre>
+      </details>
+      {% endif %}
+      {% if not record.stdout and not record.stderr %}
+      <div class="terminal-empty">No captured output for this command.</div>
+      {% endif %}
+    </div>
+  </section>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card">
+  <p>No commands recorded yet.</p>
+</div>
+{% endif %}
 {% endblock %}

@@ -14,32 +14,56 @@
       </div>
       <div>
         {{ form.namespace.label }} {{ form.namespace() }}
+        {% for error in form.namespace.errors %}
+        <small class="text-error">{{ error }}</small>
+        {% endfor %}
       </div>
       {% if resource_type != "configmap" %}
       <div>
         {{ form.image.label }} {{ form.image() }}
+        {% for error in form.image.errors %}
+        <small class="text-error">{{ error }}</small>
+        {% endfor %}
       </div>
       <div>
         {{ form.replicas.label }} {{ form.replicas() }}
+        {% for error in form.replicas.errors %}
+        <small class="text-error">{{ error }}</small>
+        {% endfor %}
       </div>
       <div>
         {{ form.container_port.label }} {{ form.container_port() }}
+        {% for error in form.container_port.errors %}
+        <small class="text-error">{{ error }}</small>
+        {% endfor %}
       </div>
       {% endif %}
       {% if resource_type in ["service"] %}
       <div>
         {{ form.service_type.label }} {{ form.service_type() }}
+        {% for error in form.service_type.errors %}
+        <small class="text-error">{{ error }}</small>
+        {% endfor %}
       </div>
       <div>
         {{ form.service_port.label }} {{ form.service_port() }}
+        {% for error in form.service_port.errors %}
+        <small class="text-error">{{ error }}</small>
+        {% endfor %}
       </div>
       <div>
         {{ form.target_port.label }} {{ form.target_port() }}
+        {% for error in form.target_port.errors %}
+        <small class="text-error">{{ error }}</small>
+        {% endfor %}
       </div>
       {% endif %}
       {% if resource_type == "configmap" %}
       <div>
         {{ form.config_data.label }} {{ form.config_data(rows=5) }}
+        {% for error in form.config_data.errors %}
+        <small class="text-error">{{ error }}</small>
+        {% endfor %}
       </div>
       {% endif %}
       <div>
