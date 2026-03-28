@@ -1,10 +1,15 @@
 from __future__ import annotations
 
+import re
+
 from flask import Blueprint, abort, flash, render_template, request
 from flask_login import current_user, login_required
+from markupsafe import Markup, escape
 
 from ..extensions import db
 from ..models import SavedTemplate
+from ..services.cluster_context import get_active_cluster
+from ..services.kube import KubectlService
 from ..services.templates import TemplateBuilder
 from .forms import TemplateForm
 
@@ -39,6 +44,8 @@ def new_template(resource_type: str):
     form = TemplateForm()
     manifest = None
     command = None
+    apply_result = None
+    action = request.form.get("action", "generate") if request.method == "POST" else "generate"
 
     if form.validate_on_submit():
         payload = _payload_from_form(form)
@@ -54,6 +61,25 @@ def new_template(resource_type: str):
             db.session.add(saved)
             db.session.commit()
             flash("Template saved.", "success")
+        if action == "apply":
+            cluster = get_active_cluster(current_user)
+            if not cluster:
+                flash("Connect a cluster before applying generated templates.", "warning")
+            else:
+                kube = KubectlService(cluster)
+                apply_result = kube.apply_manifest(
+                    manifest,
+                    user_id=current_user.id,
+                    resource_type=resource_type,
+                    resource_name=form.name.data,
+                )
+                if apply_result.success:
+                    flash(f"{resource_type.title()} applied successfully.", "success")
+                else:
+                    flash(
+                        f"{resource_type.title()} apply failed. Review stderr for details.",
+                        "danger",
+                    )
     elif request.method == "POST":
         flash("Template generation failed. Check the highlighted form fields.", "warning")
 
@@ -62,7 +88,10 @@ def new_template(resource_type: str):
         form=form,
         resource_type=resource_type,
         manifest=manifest,
+        highlighted_manifest=_highlight_yaml(manifest) if manifest else None,
         command=command,
+        active_cluster=get_active_cluster(current_user),
+        apply_result=apply_result,
     )
 
 
@@ -89,3 +118,46 @@ def _parse_config_data(text: str) -> dict:
             key, value = line.split("=", 1)
             data[key.strip()] = value.strip()
     return data or {"example": "value"}
+
+
+_YAML_KEY_RE = re.compile(r"^(\s*-\s*)?([A-Za-z0-9_.-]+):(.*)$")
+_YAML_NUMBER_RE = re.compile(r"^-?\d+(\.\d+)?$")
+
+
+def _highlight_yaml(manifest: str) -> Markup:
+    return Markup("\n".join(_highlight_yaml_line(line) for line in manifest.splitlines()))
+
+
+def _highlight_yaml_line(line: str) -> Markup:
+    match = _YAML_KEY_RE.match(line)
+    if match:
+        prefix, key, remainder = match.groups()
+        highlighted = f"{escape(prefix or '')}<span class=\"yaml-key\">{escape(key)}</span>:"
+        if remainder:
+            highlighted += _highlight_yaml_remainder(remainder)
+        return Markup(highlighted)
+    return Markup(escape(line))
+
+
+def _highlight_yaml_remainder(remainder: str) -> Markup:
+    leading = remainder[: len(remainder) - len(remainder.lstrip(" "))]
+    core = remainder.lstrip(" ")
+    if not core:
+        return Markup(escape(remainder))
+    return Markup(f"{escape(leading)}{_highlight_yaml_scalar(core)}")
+
+
+def _highlight_yaml_scalar(value: str) -> Markup:
+    stripped = value.strip()
+    if not stripped:
+        return Markup(escape(value))
+
+    cls = "yaml-value"
+    if stripped in {"true", "false", "null"}:
+        cls = "yaml-bool"
+    elif _YAML_NUMBER_RE.match(stripped):
+        cls = "yaml-number"
+    elif stripped.startswith(("'", '"')):
+        cls = "yaml-string"
+
+    return Markup(f"<span class=\"{cls}\">{escape(value)}</span>")

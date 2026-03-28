@@ -185,6 +185,18 @@ nav a.active {
   border: 1px solid var(--border);
 }
 
+.btn-run {
+  background: linear-gradient(135deg, #0f172a, #1d4ed8);
+  color: #f8fbff;
+  box-shadow: 0 14px 28px rgba(29, 78, 216, 0.24);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  box-shadow: none;
+}
+
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -264,6 +276,107 @@ th {
 
 tr:last-child td {
   border-bottom: none;
+}
+
+.resource-table {
+  margin-top: 1rem;
+  overflow: hidden;
+}
+
+.resource-table thead {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.14), rgba(168, 85, 247, 0.12));
+}
+
+.resource-table tbody tr {
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.resource-table tbody tr:hover {
+  background: rgba(96, 165, 250, 0.06);
+}
+
+.resource-name {
+  font-weight: 700;
+}
+
+.resource-action-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 700;
+  color: #f8fbff;
+  background: linear-gradient(135deg, #0f172a, #2563eb);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.22);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.resource-action-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 26px rgba(37, 99, 235, 0.28);
+}
+
+.phase-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.phase-running {
+  background: rgba(34, 197, 94, 0.16);
+  color: #166534;
+  border-color: rgba(34, 197, 94, 0.24);
+}
+
+.phase-pending {
+  background: rgba(245, 158, 11, 0.18);
+  color: #92400e;
+  border-color: rgba(245, 158, 11, 0.28);
+}
+
+.phase-failed,
+.phase-crashloopbackoff,
+.phase-imagepullbackoff,
+.phase-errimagepull {
+  background: rgba(239, 68, 68, 0.16);
+  color: #991b1b;
+  border-color: rgba(239, 68, 68, 0.24);
+}
+
+.phase-succeeded {
+  background: rgba(14, 165, 233, 0.16);
+  color: #0c4a6e;
+  border-color: rgba(14, 165, 233, 0.24);
+}
+
+[data-theme="dark"] .resource-table tbody tr:hover {
+  background: rgba(96, 165, 250, 0.08);
+}
+
+[data-theme="dark"] .phase-running {
+  color: #86efac;
+}
+
+[data-theme="dark"] .phase-pending {
+  color: #fde68a;
+}
+
+[data-theme="dark"] .phase-failed,
+[data-theme="dark"] .phase-crashloopbackoff,
+[data-theme="dark"] .phase-imagepullbackoff,
+[data-theme="dark"] .phase-errimagepull {
+  color: #fecaca;
+}
+
+[data-theme="dark"] .phase-succeeded {
+  color: #bae6fd;
 }
 
 .flash {
@@ -493,6 +606,44 @@ textarea {
   border-radius: 14px;
   border: 1px dashed var(--terminal-border);
   background: rgba(255, 255, 255, 0.02);
+}
+
+.template-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  align-items: center;
+}
+
+.yaml-terminal,
+.template-run-result {
+  margin-bottom: 1.25rem;
+}
+
+.yaml-output {
+  color: var(--terminal-text);
+}
+
+.yaml-key {
+  color: #7dd3fc;
+  font-weight: 700;
+}
+
+.yaml-value {
+  color: #f8fafc;
+}
+
+.yaml-string {
+  color: #fde68a;
+}
+
+.yaml-number {
+  color: #f9a8d4;
+}
+
+.yaml-bool {
+  color: #86efac;
+  font-weight: 600;
 }
 
 .gradient-text {

@@ -69,14 +69,73 @@
       <div>
         {{ form.save_template() }} Save to library
       </div>
-      {{ form.submit(class="btn btn-primary") }}
+      <div class="template-actions">
+        <button class="btn btn-primary" type="submit" name="action" value="generate">
+          {{ form.submit.label.text }}
+        </button>
+        {% if manifest %}
+        <button class="btn btn-run" type="submit" name="action" value="apply" {% if not active_cluster %}disabled{% endif %}>
+          Run it
+        </button>
+        {% endif %}
+      </div>
+      {% if manifest and not active_cluster %}
+      <small class="text-error">Connect an active cluster before applying this template from the UI.</small>
+      {% endif %}
     </form>
   </div>
   <div>
     {% if manifest %}
-    <h3>Generated YAML</h3>
-    <pre class="code-block">{{ manifest }}</pre>
-    <p>Command: <code>{{ command }}</code></p>
+    <section class="terminal-window yaml-terminal">
+      <div class="terminal-toolbar">
+        <div class="terminal-dots">
+          <span class="terminal-dot terminal-dot-close"></span>
+          <span class="terminal-dot terminal-dot-minimize"></span>
+          <span class="terminal-dot terminal-dot-maximize"></span>
+        </div>
+        <div class="terminal-title">Generated {{ resource_type }} YAML</div>
+        <div class="terminal-status is-success">ready</div>
+      </div>
+      <div class="terminal-body">
+        <div class="terminal-meta">
+          <span>{{ form.name.data }}</span>
+          <span>{{ form.namespace.data }}</span>
+          <span>{{ active_cluster.nickname if active_cluster else "No active cluster" }}</span>
+        </div>
+        <pre class="terminal-line"><span class="terminal-prompt">kubectl $</span> {{ command }}</pre>
+        <pre class="terminal-output yaml-output">{{ highlighted_manifest }}</pre>
+      </div>
+    </section>
+    {% if apply_result %}
+    <section class="terminal-window terminal-window-compact template-run-result">
+      <div class="terminal-toolbar">
+        <div class="terminal-dots">
+          <span class="terminal-dot terminal-dot-close"></span>
+          <span class="terminal-dot terminal-dot-minimize"></span>
+          <span class="terminal-dot terminal-dot-maximize"></span>
+        </div>
+        <div class="terminal-title">Apply result</div>
+        <div class="terminal-status {{ 'is-success' if apply_result.success else 'is-failed' }}">
+          {{ "success" if apply_result.success else "failed" }}
+        </div>
+      </div>
+      <div class="terminal-body">
+        <pre class="terminal-line"><span class="terminal-prompt">kubectl $</span> {{ apply_result.command }}</pre>
+        {% if apply_result.stdout %}
+        <details class="terminal-details" open>
+          <summary class="terminal-summary">stdout</summary>
+          <pre class="terminal-output">{{ apply_result.stdout }}</pre>
+        </details>
+        {% endif %}
+        {% if apply_result.stderr %}
+        <details class="terminal-details" open>
+          <summary class="terminal-summary">stderr</summary>
+          <pre class="terminal-output terminal-output-error">{{ apply_result.stderr }}</pre>
+        </details>
+        {% endif %}
+      </div>
+    </section>
+    {% endif %}
     {% else %}
     <p>Fill in the form to generate YAML.</p>
     {% endif %}

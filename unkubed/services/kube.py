@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import shlex
 import subprocess
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -46,9 +47,12 @@ class KubectlService:
         user_id: int,
         description: str,
         capture: bool = True,
+        display_args: Iterable[str] | None = None,
     ) -> CommandResult:
-        cmd = self.base_command + list(args)
-        command_str = shlex.join(cmd)
+        actual_args = list(args)
+        cmd = self.base_command + actual_args
+        shown_args = list(display_args) if display_args is not None else actual_args
+        command_str = shlex.join(self.base_command + shown_args)
         try:
             completed = subprocess.run(
                 cmd,
@@ -81,6 +85,34 @@ class KubectlService:
         db.session.commit()
 
         return CommandResult(command_str, stdout, stderr, exit_code)
+
+    def apply_manifest(
+        self,
+        manifest: str,
+        user_id: int,
+        resource_type: str,
+        resource_name: str,
+    ) -> CommandResult:
+        temp_path = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="w",
+                encoding="utf-8",
+                suffix=".yaml",
+                delete=False,
+            ) as handle:
+                handle.write(manifest)
+                temp_path = handle.name
+
+            return self.execute(
+                ["apply", "-f", temp_path],
+                user_id=user_id,
+                description=f"kubectl apply generated {resource_type} {resource_name}",
+                display_args=["apply", "-f", f"{resource_type}-{resource_name}.yaml"],
+            )
+        finally:
+            if temp_path:
+                Path(temp_path).unlink(missing_ok=True)
 
     def get_json(
         self,

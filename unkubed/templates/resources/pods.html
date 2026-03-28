@@ -3,7 +3,7 @@
 {% block content %}
 <h2>Pods {% if selected_namespace %}({{ selected_namespace }}){% endif %}</h2>
 <div class="code-block">{{ command }}</div>
-<table>
+<table class="resource-table pod-table">
   <thead>
     <tr>
       <th>Name</th>
@@ -15,16 +15,25 @@
   </thead>
   <tbody>
     {% for pod in pods %}
+    {% set phase = pod.status.phase or "Unknown" %}
     <tr>
-      <td>{{ pod.metadata.name }}</td>
+      <td class="resource-name">{{ pod.metadata.name }}</td>
       <td>{{ pod.metadata.namespace }}</td>
-      <td>{{ pod.status.phase }}</td>
+      <td>
+        <span class="phase-badge phase-{{ phase|lower|replace(' ', '-') }}">
+          {{ phase }}
+        </span>
+      </td>
       {% set counts = namespace(total=0) %}
       {% for c in pod.status.containerStatuses or [] %}
         {% set counts.total = counts.total + c.restartCount %}
       {% endfor %}
       <td>{{ counts.total }}</td>
-      <td><a href="{{ url_for('resources.pod_detail', namespace=pod.metadata.namespace, pod_name=pod.metadata.name) }}">Inspect</a></td>
+      <td>
+        <a class="resource-action-link" href="{{ url_for('resources.pod_detail', namespace=pod.metadata.namespace, pod_name=pod.metadata.name) }}">
+          Inspect
+        </a>
+      </td>
     </tr>
     {% endfor %}
   </tbody>
