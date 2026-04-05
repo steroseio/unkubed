@@ -81,8 +81,7 @@ def register_extensions(app: Flask) -> None:
 
 def register_blueprints(app: Flask) -> None:
     from .auth.routes import auth_bp
-    from .clusters.routes import clusters_bp
-    from .dashboard.routes import dashboard_bp, history_bp, main_bp, resources_bp
+    from .dashboard.routes import clusters_bp, dashboard_bp, history_bp, main_bp, resources_bp
     from .templates_module.routes import templates_bp
 
     app.register_blueprint(main_bp)
