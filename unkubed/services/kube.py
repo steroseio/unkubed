@@ -11,7 +11,7 @@ from typing import Any, Iterable
 from flask import current_app
 from flask_login import current_user
 
-from ..extensions import db
+from .. import db
 from ..models import Cluster, CommandHistory
 
 

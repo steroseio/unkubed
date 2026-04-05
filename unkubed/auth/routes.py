@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
-from ..extensions import db
+from .. import db
 from ..models import User
 
 auth_bp = Blueprint("auth", __name__, template_folder="../templates/auth")

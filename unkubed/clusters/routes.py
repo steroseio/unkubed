@@ -8,7 +8,7 @@ from flask_wtf import FlaskForm
 from wtforms import SelectField, StringField, SubmitField
 from wtforms.validators import DataRequired, Length, Optional
 
-from ..extensions import db
+from .. import db
 from ..models import Cluster
 from ..services.kube import KubectlService, get_active_cluster
 

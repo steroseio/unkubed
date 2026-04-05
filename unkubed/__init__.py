@@ -1,9 +1,17 @@
 import os
 
 from flask import Flask
+from flask_login import LoginManager
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import CSRFProtect
 
 from .config import config_by_name
-from .extensions import csrf, db, login_manager, migrate
+
+db = SQLAlchemy()
+migrate = Migrate()
+login_manager = LoginManager()
+csrf = CSRFProtect()
 
 
 def create_app(config_name: str | None = None) -> Flask:

@@ -10,7 +10,7 @@ from wtforms import BooleanField, IntegerField, SelectField, StringField, Submit
 from wtforms.validators import DataRequired, Length, NumberRange, Optional
 import yaml
 
-from ..extensions import db
+from .. import db
 from ..models import SavedTemplate
 from ..services.kube import KubectlService, get_active_cluster
 

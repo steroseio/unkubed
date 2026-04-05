@@ -1,6 +1,6 @@
 from types import SimpleNamespace
 
-from unkubed.extensions import db
+from unkubed import db
 from unkubed.models import Cluster, User
 from unkubed.services.kube import KubectlService
 
