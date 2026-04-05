@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from flask import current_app
-from flask_login import current_user
 
 from .. import db
 from ..models import Cluster, CommandHistory
@@ -182,17 +181,6 @@ def get_pod_logs(
     if not result.success:
         return result.stderr, result.command
     return result.stdout, result.command
-
-def get_active_cluster(user=None) -> Cluster | None:
-    target_user = user or current_user
-    if not target_user or target_user.is_anonymous:
-        return None
-    return (
-        Cluster.query.filter_by(user_id=target_user.id, is_active=True)
-        .order_by(Cluster.updated_at.desc())
-        .first()
-    )
-
 
 def _trim_output(output: str) -> str:
     limit = current_app.config.get("COMMAND_CAPTURE_LINES", 60)

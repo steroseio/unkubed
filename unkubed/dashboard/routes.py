@@ -17,7 +17,6 @@ from .. import db
 from ..models import Cluster, CommandHistory, SavedTemplate, User
 from ..services.kube import (
     apply_manifest,
-    get_active_cluster,
     get_kube_json,
     get_pod_events,
     get_pod_logs,
@@ -163,6 +162,17 @@ def logout():
     logout_user()
     flash("Come back soon to keep demystifying Kubernetes.", "info")
     return redirect(url_for("main.index"))
+
+
+def get_active_cluster(user=None) -> Cluster | None:
+    target_user = user or current_user
+    if not target_user or target_user.is_anonymous:
+        return None
+    return (
+        Cluster.query.filter_by(user_id=target_user.id, is_active=True)
+        .order_by(Cluster.updated_at.desc())
+        .first()
+    )
 
 
 def resolve_kubeconfig_path(raw_path: str | None) -> str:
