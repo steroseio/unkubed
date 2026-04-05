@@ -80,8 +80,7 @@ def register_extensions(app: Flask) -> None:
 
 
 def register_blueprints(app: Flask) -> None:
-    from .auth.routes import auth_bp
-    from .dashboard.routes import clusters_bp, dashboard_bp, history_bp, main_bp, resources_bp, templates_bp
+    from .dashboard.routes import auth_bp, clusters_bp, dashboard_bp, history_bp, main_bp, resources_bp, templates_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix="/auth")
