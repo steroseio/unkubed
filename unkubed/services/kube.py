@@ -176,23 +176,6 @@ class KubectlService:
             return result.stderr, result.command
         return result.stdout, result.command
 
-    @staticmethod
-    def list_contexts(kubeconfig_path: str) -> list[str]:
-        config_path = Path(kubeconfig_path).expanduser()
-        if not config_path.exists():
-            return []
-        cmd = ["kubectl", "--kubeconfig", str(config_path), "config", "get-contexts", "-o", "name"]
-        try:
-            completed = subprocess.run(
-                cmd, check=False, text=True, capture_output=True
-            )
-        except FileNotFoundError:
-            return []
-        if completed.returncode != 0:
-            return []
-        return [line.strip() for line in completed.stdout.splitlines() if line.strip()]
-
-
 def get_active_cluster(user=None) -> Cluster | None:
     target_user = user or current_user
     if not target_user or target_user.is_anonymous:

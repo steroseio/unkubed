@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import subprocess
 
 from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
@@ -10,7 +11,7 @@ from wtforms.validators import DataRequired, Length, Optional
 
 from .. import db
 from ..models import Cluster
-from ..services.kube import KubectlService, get_active_cluster
+from ..services.kube import get_active_cluster
 
 clusters_bp = Blueprint("clusters", __name__, template_folder="../templates/clusters")
 
@@ -54,6 +55,22 @@ def resolve_kubeconfig_path(raw_path: str | None) -> str:
     return str(expanded)
 
 
+def list_contexts(kubeconfig_path: str) -> list[str]:
+    config_path = Path(kubeconfig_path).expanduser()
+    if not config_path.exists():
+        return []
+    cmd = ["kubectl", "--kubeconfig", str(config_path), "config", "get-contexts", "-o", "name"]
+    try:
+        completed = subprocess.run(
+            cmd, check=False, text=True, capture_output=True
+        )
+    except FileNotFoundError:
+        return []
+    if completed.returncode != 0:
+        return []
+    return [line.strip() for line in completed.stdout.splitlines() if line.strip()]
+
+
 @clusters_bp.route("/", methods=["GET", "POST"])
 @login_required
 def configure():
@@ -66,7 +83,7 @@ def configure():
     resolved_default = resolve_kubeconfig_path(requested_path)
     form.kubeconfig_path.data = requested_path
 
-    contexts = KubectlService.list_contexts(resolved_default)
+    contexts = list_contexts(resolved_default)
     if not Path(resolved_default).exists():
         flash(
             f"Kubeconfig not found at {resolved_default}. Verify your Docker volume mounts.",
