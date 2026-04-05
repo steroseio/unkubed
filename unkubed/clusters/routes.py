@@ -7,8 +7,7 @@ from flask_login import current_user, login_required
 
 from ..extensions import db
 from ..models import Cluster
-from ..services.kube import KubectlService
-from ..services.cluster_context import get_active_cluster
+from ..services.kube import KubectlService, get_active_cluster
 from ..services.paths import resolve_kubeconfig_path
 from .forms import ClusterConnectForm
 

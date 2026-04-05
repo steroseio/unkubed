@@ -8,8 +8,7 @@ from markupsafe import Markup, escape
 
 from ..extensions import db
 from ..models import SavedTemplate
-from ..services.cluster_context import get_active_cluster
-from ..services.kube import KubectlService
+from ..services.kube import KubectlService, get_active_cluster
 from ..services.templates import TemplateBuilder
 from .forms import TemplateForm
 

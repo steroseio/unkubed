@@ -2,8 +2,7 @@ from flask import Blueprint, flash, render_template
 from flask_login import current_user, login_required
 
 from ..models import CommandHistory
-from ..services.cluster_context import get_active_cluster
-from ..services.kube import KubectlService
+from ..services.kube import KubectlService, get_active_cluster
 
 dashboard_bp = Blueprint("dashboard", __name__, template_folder="../templates/dashboard")
 

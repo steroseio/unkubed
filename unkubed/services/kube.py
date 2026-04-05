@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from flask import current_app
+from flask_login import current_user
 
 from ..extensions import db
 from ..models import Cluster, CommandHistory
@@ -190,6 +191,17 @@ class KubectlService:
         if completed.returncode != 0:
             return []
         return [line.strip() for line in completed.stdout.splitlines() if line.strip()]
+
+
+def get_active_cluster(user=None) -> Cluster | None:
+    target_user = user or current_user
+    if not target_user or target_user.is_anonymous:
+        return None
+    return (
+        Cluster.query.filter_by(user_id=target_user.id, is_active=True)
+        .order_by(Cluster.updated_at.desc())
+        .first()
+    )
 
 
 def _trim_output(output: str) -> str:

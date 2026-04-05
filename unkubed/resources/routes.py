@@ -3,8 +3,7 @@ from __future__ import annotations
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
-from ..services.cluster_context import get_active_cluster
-from ..services.kube import KubectlService
+from ..services.kube import KubectlService, get_active_cluster
 from ..troubleshooting.heuristics import analyze_pod
 
 resources_bp = Blueprint("resources", __name__, template_folder="../templates/resources")
