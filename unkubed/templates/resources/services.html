@@ -8,7 +8,20 @@
     <p class="page-subtitle">Review how cluster services expose workloads, including service type, cluster IP, and the port mappings backing each endpoint.</p>
   </div>
 </div>
-<div class="code-block">{{ command }}</div>
+<section class="terminal-window terminal-window-compact command-panel">
+  <div class="terminal-toolbar">
+    <div class="terminal-dots">
+      <span class="terminal-dot terminal-dot-close"></span>
+      <span class="terminal-dot terminal-dot-minimize"></span>
+      <span class="terminal-dot terminal-dot-maximize"></span>
+    </div>
+    <div class="terminal-title">Service query</div>
+    <div class="terminal-status status-badge is-active">get</div>
+  </div>
+  <div class="terminal-body">
+    <pre class="terminal-line"><span class="terminal-prompt">kubectl $</span> {{ command }}</pre>
+  </div>
+</section>
 <table class="resource-table">
   <thead>
     <tr>

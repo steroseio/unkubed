@@ -339,6 +339,51 @@ nav a.active {
   margin-left: 0.5rem;
 }
 
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.status-badge.is-active {
+  background: rgba(79, 109, 143, 0.14);
+  color: #334e68;
+  border-color: rgba(79, 109, 143, 0.18);
+}
+
+.status-badge.is-ready,
+.status-badge.is-success {
+  background: rgba(34, 197, 94, 0.16);
+  color: #166534;
+  border-color: rgba(34, 197, 94, 0.24);
+}
+
+.status-badge.is-pending {
+  background: rgba(245, 158, 11, 0.18);
+  color: #92400e;
+  border-color: rgba(245, 158, 11, 0.28);
+}
+
+.status-badge.is-failed {
+  background: rgba(239, 68, 68, 0.16);
+  color: #991b1b;
+  border-color: rgba(239, 68, 68, 0.24);
+}
+
+.status-badge.is-unknown {
+  background: rgba(148, 163, 184, 0.16);
+  color: #475569;
+  border-color: rgba(148, 163, 184, 0.22);
+}
+
 .stat {
   font-size: 2.5rem;
   font-weight: 700;
@@ -383,6 +428,14 @@ tr:last-child td {
 .resource-table {
   margin-top: 1rem;
   overflow: hidden;
+}
+
+.command-panel {
+  margin-bottom: 1rem;
+}
+
+.command-panel .terminal-body {
+  padding: 0.85rem 1rem;
 }
 
 .resource-table thead {
@@ -477,6 +530,12 @@ tr:last-child td {
   border-color: rgba(14, 165, 233, 0.24);
 }
 
+.phase-unknown {
+  background: rgba(148, 163, 184, 0.16);
+  color: #475569;
+  border-color: rgba(148, 163, 184, 0.22);
+}
+
 [data-theme="dark"] .resource-table tbody tr:hover {
   background: rgba(96, 165, 250, 0.08);
 }
@@ -484,6 +543,28 @@ tr:last-child td {
 [data-theme="dark"] .resource-pill {
   background: rgba(136, 164, 195, 0.14);
   border-color: rgba(136, 164, 195, 0.18);
+}
+
+[data-theme="dark"] .status-badge.is-active {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .status-badge.is-ready,
+[data-theme="dark"] .status-badge.is-success {
+  color: #86efac;
+}
+
+[data-theme="dark"] .status-badge.is-pending {
+  color: #fde68a;
+}
+
+[data-theme="dark"] .status-badge.is-failed {
+  color: #fecaca;
+}
+
+[data-theme="dark"] .status-badge.is-unknown,
+[data-theme="dark"] .phase-unknown {
+  color: #cbd5e1;
 }
 
 [data-theme="dark"] .phase-running {
@@ -763,9 +844,23 @@ textarea {
   background: rgba(114, 241, 184, 0.08);
 }
 
+.terminal-status.is-ready {
+  color: var(--terminal-success);
+  background: rgba(114, 241, 184, 0.08);
+}
+
+.terminal-status.is-active {
+  color: #c7d4ea;
+  background: rgba(79, 109, 143, 0.16);
+}
+
 .terminal-status.is-failed {
   color: var(--terminal-error);
   background: rgba(255, 143, 143, 0.08);
+}
+
+.terminal-status.status-badge {
+  padding: 0.2rem 0.7rem;
 }
 
 .terminal-body {
@@ -808,6 +903,11 @@ textarea {
 .terminal-prompt {
   color: var(--terminal-success);
   font-weight: 700;
+}
+
+.command-inline {
+  margin-top: 0.25rem;
+  padding: 0.8rem 0.9rem;
 }
 
 .terminal-output-error {

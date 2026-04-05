@@ -19,7 +19,7 @@
         <span class="terminal-dot terminal-dot-maximize"></span>
       </div>
       <div class="terminal-title">{{ record.description or "kubectl command" }}</div>
-      <div class="terminal-status {{ 'is-success' if record.success else 'is-failed' }}">
+      <div class="terminal-status status-badge {{ 'is-success' if record.success else 'is-failed' }}">
         {{ "success" if record.success else "failed" }}
       </div>
     </div>

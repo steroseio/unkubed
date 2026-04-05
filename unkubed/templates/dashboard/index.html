@@ -22,22 +22,22 @@
   <div class="card">
     <h3>Namespaces</h3>
     <p class="stat">{{ namespaces | length }}</p>
-    <div class="code-block">{{ commands.namespaces }}</div>
+    <pre class="terminal-line command-inline"><span class="terminal-prompt">kubectl $</span> {{ commands.namespaces }}</pre>
   </div>
   <div class="card">
     <h3>Pods</h3>
     <p class="stat">{{ pods | length }}</p>
-    <div class="code-block">{{ commands.pods }}</div>
+    <pre class="terminal-line command-inline"><span class="terminal-prompt">kubectl $</span> {{ commands.pods }}</pre>
   </div>
   <div class="card">
     <h3>Deployments</h3>
     <p class="stat">{{ deployments | length }}</p>
-    <div class="code-block">{{ commands.deployments }}</div>
+    <pre class="terminal-line command-inline"><span class="terminal-prompt">kubectl $</span> {{ commands.deployments }}</pre>
   </div>
   <div class="card">
     <h3>Services</h3>
     <p class="stat">{{ services | length }}</p>
-    <div class="code-block">{{ commands.services }}</div>
+    <pre class="terminal-line command-inline"><span class="terminal-prompt">kubectl $</span> {{ commands.services }}</pre>
   </div>
 </div>
 
@@ -53,7 +53,7 @@
         <span class="terminal-dot terminal-dot-maximize"></span>
       </div>
       <div class="terminal-title">{{ record.description or "kubectl command" }}</div>
-      <div class="terminal-status {{ 'is-success' if record.success else 'is-failed' }}">
+      <div class="terminal-status status-badge {{ 'is-success' if record.success else 'is-failed' }}">
         {{ "success" if record.success else "failed" }}
       </div>
     </div>

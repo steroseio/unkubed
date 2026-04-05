@@ -54,7 +54,7 @@
         <div>
           <strong>{{ cluster.nickname }}</strong> — {{ cluster.context_name }}
           {% if active_cluster and cluster.id == active_cluster.id %}
-          <span class="badge">Active</span>
+          <span class="status-badge is-active">Active</span>
           {% endif %}
         </div>
         <div class="cluster-actions">

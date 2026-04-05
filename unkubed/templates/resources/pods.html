@@ -8,7 +8,20 @@
     <p class="page-subtitle">Inspect pod status, restart counts, and direct navigation into troubleshooting details for each workload instance.</p>
   </div>
 </div>
-<div class="code-block">{{ command }}</div>
+<section class="terminal-window terminal-window-compact command-panel">
+  <div class="terminal-toolbar">
+    <div class="terminal-dots">
+      <span class="terminal-dot terminal-dot-close"></span>
+      <span class="terminal-dot terminal-dot-minimize"></span>
+      <span class="terminal-dot terminal-dot-maximize"></span>
+    </div>
+    <div class="terminal-title">Pod query</div>
+    <div class="terminal-status status-badge is-active">get</div>
+  </div>
+  <div class="terminal-body">
+    <pre class="terminal-line"><span class="terminal-prompt">kubectl $</span> {{ command }}</pre>
+  </div>
+</section>
 <table class="resource-table pod-table">
   <thead>
     <tr>
@@ -26,7 +39,7 @@
       <td class="resource-name">{{ pod.metadata.name }}</td>
       <td>{{ pod.metadata.namespace }}</td>
       <td>
-        <span class="phase-badge phase-{{ phase|lower|replace(' ', '-') }}">
+        <span class="phase-badge status-badge phase-{{ phase|lower|replace(' ', '-') }}">
           {{ phase }}
         </span>
       </td>

@@ -8,7 +8,20 @@
     <p class="page-subtitle">Browse the namespaces currently available in the connected cluster and inspect the exact command used to retrieve them.</p>
   </div>
 </div>
-<div class="code-block">{{ command }}</div>
+<section class="terminal-window terminal-window-compact command-panel">
+  <div class="terminal-toolbar">
+    <div class="terminal-dots">
+      <span class="terminal-dot terminal-dot-close"></span>
+      <span class="terminal-dot terminal-dot-minimize"></span>
+      <span class="terminal-dot terminal-dot-maximize"></span>
+    </div>
+    <div class="terminal-title">Namespace query</div>
+    <div class="terminal-status status-badge is-active">get</div>
+  </div>
+  <div class="terminal-body">
+    <pre class="terminal-line"><span class="terminal-prompt">kubectl $</span> {{ command }}</pre>
+  </div>
+</section>
 <table class="resource-table">
   <thead>
     <tr>
@@ -22,7 +35,7 @@
     <tr>
       <td class="resource-name">{{ ns.metadata.name }}</td>
       <td>
-        <span class="phase-badge phase-{{ (ns.status.phase or 'Unknown')|lower|replace(' ', '-') }}">
+        <span class="phase-badge status-badge phase-{{ (ns.status.phase or 'Unknown')|lower|replace(' ', '-') }}">
           {{ ns.status.phase or "Unknown" }}
         </span>
       </td>

@@ -94,7 +94,7 @@
           <span class="terminal-dot terminal-dot-maximize"></span>
         </div>
         <div class="terminal-title">Generated {{ resource_type }} YAML</div>
-        <div class="terminal-status is-success">ready</div>
+        <div class="terminal-status status-badge is-ready">ready</div>
       </div>
       <div class="terminal-body">
         <div class="terminal-meta">
@@ -115,7 +115,7 @@
           <span class="terminal-dot terminal-dot-maximize"></span>
         </div>
         <div class="terminal-title">Apply result</div>
-        <div class="terminal-status {{ 'is-success' if apply_result.success else 'is-failed' }}">
+        <div class="terminal-status status-badge {{ 'is-success' if apply_result.success else 'is-failed' }}">
           {{ "success" if apply_result.success else "failed" }}
         </div>
       </div>
