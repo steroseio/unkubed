@@ -4,13 +4,34 @@ from pathlib import Path
 
 from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
+from flask_wtf import FlaskForm
+from wtforms import SelectField, StringField, SubmitField
+from wtforms.validators import DataRequired, Length, Optional
 
 from ..extensions import db
 from ..models import Cluster
 from ..services.kube import KubectlService, get_active_cluster
-from .forms import ClusterConnectForm
 
 clusters_bp = Blueprint("clusters", __name__, template_folder="../templates/clusters")
+
+
+class ClusterConnectForm(FlaskForm):
+    nickname = StringField("Nickname", validators=[DataRequired(), Length(max=120)])
+    kubeconfig_path = StringField(
+        "Kubeconfig Path",
+        validators=[DataRequired(), Length(max=500)],
+    )
+    context_name = SelectField(
+        "Context",
+        validators=[Optional(), Length(max=200)],
+        choices=[],
+        validate_choice=False,
+    )
+    manual_context = StringField(
+        "Manual context name",
+        validators=[Optional(), Length(max=200)],
+    )
+    submit = SubmitField("Save connection")
 
 
 def resolve_kubeconfig_path(raw_path: str | None) -> str:
