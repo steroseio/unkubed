@@ -1,8 +1,8 @@
 from types import SimpleNamespace
 
 from unkubed import db
+import unkubed.dashboard.routes as routes_module
 from unkubed.models import Cluster, User
-import unkubed.services.kube as kube_module
 
 
 def _login(client, app):
@@ -72,7 +72,7 @@ def test_deployment_template_apply_uses_active_cluster(client, app, monkeypatch)
             stderr="",
         )
 
-    monkeypatch.setattr(kube_module, "apply_manifest", fake_apply_manifest)
+    monkeypatch.setattr(routes_module, "apply_manifest", fake_apply_manifest)
 
     response = client.post(
         "/templates/new/deployment",

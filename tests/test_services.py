@@ -1,6 +1,6 @@
 from types import SimpleNamespace
 
-from unkubed.services.kube import build_base_command
+from unkubed.dashboard.routes import build_base_command
 
 
 def test_kubectl_helper_builds_expected_command(app):
