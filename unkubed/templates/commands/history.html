@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Command history</h2>
+<div class="page-header">
+  <div>
+    <p class="page-eyebrow">Audit trail</p>
+    <h2>Command history</h2>
+    <p class="page-subtitle">Review the kubectl commands Unkubed has executed on your behalf, including timestamps, exit codes, and captured output.</p>
+  </div>
+</div>
 {% if records %}
 <div class="terminal-stack">
   {% for record in records %}

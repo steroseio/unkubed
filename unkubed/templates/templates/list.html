@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Saved templates</h2>
-<div class="hero-actions">
-  <a class="btn btn-primary" href="{{ url_for('templates.new_template', resource_type='deployment') }}">New deployment</a>
-  <a class="btn btn-ghost" href="{{ url_for('templates.new_template', resource_type='service') }}">New service</a>
-  <a class="btn btn-ghost" href="{{ url_for('templates.new_template', resource_type='configmap') }}">New configmap</a>
+<div class="page-header">
+  <div>
+    <p class="page-eyebrow">Templates</p>
+    <h2>Saved templates</h2>
+    <p class="page-subtitle">Create starter manifests for common Kubernetes resources, then revisit saved templates when you want to reapply or study them later.</p>
+  </div>
+  <div class="page-header-actions">
+    <a class="btn btn-primary" href="{{ url_for('templates.new_template', resource_type='deployment') }}">New deployment</a>
+    <a class="btn btn-ghost" href="{{ url_for('templates.new_template', resource_type='service') }}">New service</a>
+    <a class="btn btn-ghost" href="{{ url_for('templates.new_template', resource_type='configmap') }}">New configmap</a>
+  </div>
 </div>
 {% if templates %}
   <div class="card-grid">

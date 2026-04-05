@@ -1,11 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Cluster dashboard</h2>
+<div class="page-header">
+  <div>
+    <p class="page-eyebrow">Dashboard</p>
+    <h2>Cluster dashboard</h2>
+    <p class="page-subtitle">Review the current namespace, workload, and service counts, then inspect the exact kubectl commands used to populate each view.</p>
+  </div>
+  {% if not cluster %}
+  <div class="page-header-actions">
+    <a class="btn btn-primary" href="{{ url_for('clusters.configure') }}">Connect cluster</a>
+  </div>
+  {% endif %}
+</div>
 {% if not cluster %}
 <div class="card">
   <p>Connect a cluster to populate the dashboard.</p>
-  <a class="btn btn-primary" href="{{ url_for('clusters.configure') }}">Connect cluster</a>
 </div>
 {% else %}
 <div class="card-grid">
@@ -31,7 +41,7 @@
   </div>
 </div>
 
-<h3>Recent commands</h3>
+<h3 class="section-title">Recent commands</h3>
 {% if recent_commands %}
 <div class="terminal-stack">
   {% for record in recent_commands %}
