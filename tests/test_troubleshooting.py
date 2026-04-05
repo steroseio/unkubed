@@ -1,4 +1,4 @@
-from unkubed.troubleshooting.heuristics import analyze_pod
+from unkubed.dashboard.routes import analyze_pod
 
 
 def test_troubleshooting_detects_crashloop():
