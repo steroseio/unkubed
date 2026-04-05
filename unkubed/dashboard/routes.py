@@ -4,8 +4,19 @@ from flask_login import current_user, login_required
 from ..models import CommandHistory
 from ..services.kube import KubectlService, get_active_cluster
 
+main_bp = Blueprint("main", __name__)
 dashboard_bp = Blueprint("dashboard", __name__, template_folder="../templates/dashboard")
 history_bp = Blueprint("history", __name__, template_folder="../templates/commands")
+
+
+@main_bp.route("/")
+def index():
+    return render_template("main/index.html")
+
+
+@main_bp.route("/features")
+def features():
+    return render_template("main/features.html")
 
 
 @dashboard_bp.route("/")
