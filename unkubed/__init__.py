@@ -60,27 +60,17 @@ csrf = CSRFProtect()
 def create_app(config_name: str | None = None) -> Flask:
     """Application factory."""
 
+    from .dashboard.routes import auth_bp, clusters_bp, dashboard_bp, history_bp, main_bp, resources_bp, templates_bp
+    from .models import Cluster, CommandHistory, SavedTemplate, TroubleshootingReport, User
+
     app = Flask(__name__, template_folder="templates", static_folder="static")
     env = config_name or os.getenv("APP_ENV", "development")
     app.config.from_object(config_by_name.get(env, config_by_name["development"]))
 
-    register_extensions(app)
-    register_blueprints(app)
-    register_shellcontext(app)
-    configure_login_manager()
-
-    return app
-
-
-def register_extensions(app: Flask) -> None:
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
     csrf.init_app(app)
-
-
-def register_blueprints(app: Flask) -> None:
-    from .dashboard.routes import auth_bp, clusters_bp, dashboard_bp, history_bp, main_bp, resources_bp, templates_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix="/auth")
@@ -89,10 +79,6 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(resources_bp)
     app.register_blueprint(templates_bp, url_prefix="/templates")
     app.register_blueprint(history_bp, url_prefix="/commands")
-
-
-def register_shellcontext(app: Flask) -> None:
-    from .models import Cluster, CommandHistory, SavedTemplate, TroubleshootingReport, User
 
     @app.shell_context_processor
     def shell_context():
@@ -105,10 +91,6 @@ def register_shellcontext(app: Flask) -> None:
             "TroubleshootingReport": TroubleshootingReport,
         }
 
-
-def configure_login_manager() -> None:
-    from .models import User
-
     login_manager.login_view = "auth.login"
 
     @login_manager.user_loader
@@ -116,3 +98,5 @@ def configure_login_manager() -> None:
         if user_id is None:
             return None
         return User.query.get(int(user_id))
+
+    return app
