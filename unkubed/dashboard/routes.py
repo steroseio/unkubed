@@ -5,6 +5,7 @@ from ..models import CommandHistory
 from ..services.kube import KubectlService, get_active_cluster
 
 dashboard_bp = Blueprint("dashboard", __name__, template_folder="../templates/dashboard")
+history_bp = Blueprint("history", __name__, template_folder="../templates/commands")
 
 
 @dashboard_bp.route("/")
@@ -51,3 +52,15 @@ def overview():
         commands=commands,
         recent_commands=recent_commands,
     )
+
+
+@history_bp.route("/history")
+@login_required
+def history():
+    records = (
+        CommandHistory.query.filter_by(user_id=current_user.id)
+        .order_by(CommandHistory.executed_at.desc())
+        .limit(100)
+        .all()
+    )
+    return render_template("commands/history.html", records=records)
