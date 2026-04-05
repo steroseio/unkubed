@@ -8,10 +8,29 @@ from flask_login import current_user, login_required
 from ..extensions import db
 from ..models import Cluster
 from ..services.kube import KubectlService, get_active_cluster
-from ..services.paths import resolve_kubeconfig_path
 from .forms import ClusterConnectForm
 
 clusters_bp = Blueprint("clusters", __name__, template_folder="../templates/clusters")
+
+
+def resolve_kubeconfig_path(raw_path: str | None) -> str:
+    """Map host-provided kubeconfig paths to container-accessible equivalents."""
+
+    if not raw_path:
+        return ""
+
+    expanded = Path(raw_path).expanduser()
+    if expanded.exists():
+        return str(expanded)
+
+    host_home = current_app.config.get("HOST_HOME_PATH")
+    if host_home and raw_path.startswith(host_home):
+        relative = raw_path[len(host_home) :].lstrip("/\\")
+        candidate = Path.home() / relative
+        if candidate.exists():
+            return str(candidate)
+
+    return str(expanded)
 
 
 @clusters_bp.route("/", methods=["GET", "POST"])
