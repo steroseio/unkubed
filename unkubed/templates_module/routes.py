@@ -12,7 +12,7 @@ import yaml
 
 from .. import db
 from ..models import SavedTemplate
-from ..services.kube import KubectlService, get_active_cluster
+from ..services.kube import apply_manifest, get_active_cluster
 
 templates_bp = Blueprint("templates", __name__, template_folder="../templates/templates")
 
@@ -93,8 +93,8 @@ def new_template(resource_type: str):
             if not cluster:
                 flash("Connect a cluster before applying generated templates.", "warning")
             else:
-                kube = KubectlService(cluster)
-                apply_result = kube.apply_manifest(
+                apply_result = apply_manifest(
+                    cluster,
                     manifest,
                     user_id=current_user.id,
                     resource_type=resource_type,

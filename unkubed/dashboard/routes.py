@@ -4,7 +4,12 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from ..models import CommandHistory
-from ..services.kube import KubectlService, get_active_cluster
+from ..services.kube import (
+    get_active_cluster,
+    get_kube_json,
+    get_pod_events,
+    get_pod_logs,
+)
 from ..troubleshooting.heuristics import analyze_pod
 
 main_bp = Blueprint("main", __name__)
@@ -34,17 +39,16 @@ def overview():
     commands = {}
 
     if cluster:
-        kube = KubectlService(cluster)
-        namespaces_payload, ns_cmd = kube.get_json("namespaces", None, current_user.id)
+        namespaces_payload, ns_cmd = get_kube_json(cluster, "namespaces", None, current_user.id)
         namespaces = namespaces_payload.get("items", [])
         commands["namespaces"] = ns_cmd
-        pods_payload, pods_cmd = kube.get_json("pods", None, current_user.id)
+        pods_payload, pods_cmd = get_kube_json(cluster, "pods", None, current_user.id)
         pods = pods_payload.get("items", [])
         commands["pods"] = pods_cmd
-        deployments_payload, dep_cmd = kube.get_json("deployments", None, current_user.id)
+        deployments_payload, dep_cmd = get_kube_json(cluster, "deployments", None, current_user.id)
         deployments = deployments_payload.get("items", [])
         commands["deployments"] = dep_cmd
-        services_payload, svc_cmd = kube.get_json("services", None, current_user.id)
+        services_payload, svc_cmd = get_kube_json(cluster, "services", None, current_user.id)
         services = services_payload.get("items", [])
         commands["services"] = svc_cmd
     else:
@@ -95,8 +99,7 @@ def namespaces():
     cluster, response = _cluster_or_redirect()
     if response:
         return response
-    kube = KubectlService(cluster)
-    payload, command = kube.get_json("namespaces", None, current_user.id)
+    payload, command = get_kube_json(cluster, "namespaces", None, current_user.id)
     return render_template(
         "resources/namespaces.html",
         cluster=cluster,
@@ -112,8 +115,7 @@ def pods():
     if response:
         return response
     selected_namespace = request.args.get("namespace")
-    kube = KubectlService(cluster)
-    payload, command = kube.get_json("pods", selected_namespace, current_user.id)
+    payload, command = get_kube_json(cluster, "pods", selected_namespace, current_user.id)
     return render_template(
         "resources/pods.html",
         cluster=cluster,
@@ -129,13 +131,12 @@ def pod_detail(namespace: str, pod_name: str):
     cluster, response = _cluster_or_redirect()
     if response:
         return response
-    kube = KubectlService(cluster)
-    pod_payload, pod_command = kube.get_json("pod", namespace, current_user.id, name=pod_name)
+    pod_payload, pod_command = get_kube_json(cluster, "pod", namespace, current_user.id, name=pod_name)
     if not pod_payload:
         flash("Pod not found.", "danger")
         return redirect(url_for("resources.pods"))
-    events, events_command = kube.get_pod_events(namespace, pod_name, current_user.id)
-    logs, logs_command = kube.get_pod_logs(namespace, pod_name, current_user.id)
+    events, events_command = get_pod_events(cluster, namespace, pod_name, current_user.id)
+    logs, logs_command = get_pod_logs(cluster, namespace, pod_name, current_user.id)
     summary = analyze_pod(pod_payload, events, logs)
     return render_template(
         "resources/pod_detail.html",
@@ -159,8 +160,7 @@ def deployments():
     if response:
         return response
     selected_namespace = request.args.get("namespace")
-    kube = KubectlService(cluster)
-    payload, command = kube.get_json("deployments", selected_namespace, current_user.id)
+    payload, command = get_kube_json(cluster, "deployments", selected_namespace, current_user.id)
     return render_template(
         "resources/deployments.html",
         cluster=cluster,
@@ -177,8 +177,7 @@ def services():
     if response:
         return response
     selected_namespace = request.args.get("namespace")
-    kube = KubectlService(cluster)
-    payload, command = kube.get_json("services", selected_namespace, current_user.id)
+    payload, command = get_kube_json(cluster, "services", selected_namespace, current_user.id)
     return render_template(
         "resources/services.html",
         cluster=cluster,

@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 from unkubed import db
 from unkubed.models import Cluster, User
-from unkubed.services.kube import KubectlService
+import unkubed.services.kube as kube_module
 
 
 def _login(client, app):
@@ -59,8 +59,9 @@ def test_deployment_template_apply_uses_active_cluster(client, app, monkeypatch)
 
     captured = {}
 
-    def fake_apply_manifest(self, manifest, user_id, resource_type, resource_name):
+    def fake_apply_manifest(cluster, manifest, user_id, resource_type, resource_name):
         captured["manifest"] = manifest
+        captured["cluster"] = cluster
         captured["user_id"] = user_id
         captured["resource_type"] = resource_type
         captured["resource_name"] = resource_name
@@ -71,7 +72,7 @@ def test_deployment_template_apply_uses_active_cluster(client, app, monkeypatch)
             stderr="",
         )
 
-    monkeypatch.setattr(KubectlService, "apply_manifest", fake_apply_manifest)
+    monkeypatch.setattr(kube_module, "apply_manifest", fake_apply_manifest)
 
     response = client.post(
         "/templates/new/deployment",
