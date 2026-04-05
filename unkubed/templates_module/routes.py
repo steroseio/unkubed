@@ -5,20 +5,14 @@ import re
 from flask import Blueprint, abort, flash, render_template, request
 from flask_login import current_user, login_required
 from markupsafe import Markup, escape
+import yaml
 
 from ..extensions import db
 from ..models import SavedTemplate
 from ..services.kube import KubectlService, get_active_cluster
-from ..services.templates import TemplateBuilder
 from .forms import TemplateForm
 
 templates_bp = Blueprint("templates", __name__, template_folder="../templates/templates")
-
-BUILDER_MAP = {
-    "deployment": TemplateBuilder.deployment,
-    "service": TemplateBuilder.service,
-    "configmap": TemplateBuilder.configmap,
-}
 
 
 @templates_bp.route("/")
@@ -117,6 +111,79 @@ def _parse_config_data(text: str) -> dict:
             key, value = line.split("=", 1)
             data[key.strip()] = value.strip()
     return data or {"example": "value"}
+
+
+def _build_deployment_manifest(payload: dict) -> str:
+    data = {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+            "name": payload["name"],
+            "namespace": payload.get("namespace", "default"),
+            "labels": {"app": payload["name"]},
+        },
+        "spec": {
+            "replicas": int(payload.get("replicas", 1)),
+            "selector": {"matchLabels": {"app": payload["name"]}},
+            "template": {
+                "metadata": {"labels": {"app": payload["name"]}},
+                "spec": {
+                    "containers": [
+                        {
+                            "name": payload["name"],
+                            "image": payload.get("image") or "nginx:latest",
+                            "ports": [
+                                {"containerPort": int(payload.get("container_port", 80))}
+                            ],
+                        }
+                    ]
+                },
+            },
+        },
+    }
+    return yaml.safe_dump(data, sort_keys=False)
+
+
+def _build_service_manifest(payload: dict) -> str:
+    data = {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "metadata": {
+            "name": payload["name"],
+            "namespace": payload.get("namespace", "default"),
+        },
+        "spec": {
+            "type": payload.get("service_type") or "ClusterIP",
+            "selector": {"app": payload.get("selector", payload["name"])},
+            "ports": [
+                {
+                    "port": int(payload.get("service_port", 80)),
+                    "targetPort": int(payload.get("target_port", 80)),
+                }
+            ],
+        },
+    }
+    return yaml.safe_dump(data, sort_keys=False)
+
+
+def _build_configmap_manifest(payload: dict) -> str:
+    data = {
+        "apiVersion": "v1",
+        "kind": "ConfigMap",
+        "metadata": {
+            "name": payload["name"],
+            "namespace": payload.get("namespace", "default"),
+        },
+        "data": payload.get("data", {"example": "value"}),
+    }
+    return yaml.safe_dump(data, sort_keys=False)
+
+
+BUILDER_MAP = {
+    "deployment": _build_deployment_manifest,
+    "service": _build_service_manifest,
+    "configmap": _build_configmap_manifest,
+}
 
 
 _YAML_KEY_RE = re.compile(r"^(\s*-\s*)?([A-Za-z0-9_.-]+):(.*)$")
