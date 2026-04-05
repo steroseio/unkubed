@@ -509,7 +509,7 @@ def delete(cluster_id: int):
     return redirect(url_for("clusters.configure"))
 
 
-@templates_bp.route("/")
+@templates_bp.route("/", endpoint="index")
 @login_required
 def template_index():
     templates = (
