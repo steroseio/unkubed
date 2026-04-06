@@ -39,6 +39,12 @@
       {% endwith %}
       {% block content %}{% endblock %}
     </div>
+    <footer class="site-footer">
+      <p>Ste Rose <span aria-hidden="true">·</span> <span id="currentYear">2026</span></p>
+    </footer>
+    <script>
+      document.getElementById("currentYear").textContent = new Date().getFullYear();
+    </script>
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     {% block scripts %}{% endblock %}
   </body>
