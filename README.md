@@ -1,6 +1,6 @@
 # Unkubed
 
-Unkubed is a Flask-based learning companion that demystifies Kubernetes by lining up the UI, the generated YAML, and the underlying `kubectl` commands. The MVP focuses on safe, read-heavy workflows so learners can explore Minikube or any kubeconfig-backed cluster with confidence.
+Unkubed is a Flask-based learning companion that helps users understand Kubernetes by lining up the UI, the generated YAML, the exact `kubectl` command, and the resulting cluster state. The MVP focuses on safe, read-heavy workflows so learners can explore Minikube or any kubeconfig-backed cluster with confidence.
 
 ## Features
 
@@ -10,6 +10,15 @@ Unkubed is a Flask-based learning companion that demystifies Kubernetes by linin
 - YAML template generator for Deployments, Services, and ConfigMaps with the matching `kubectl apply` command
 - Command history ledger stored in Postgres
 - Modern UI with a hero landing page plus dark/light themes that auto-toggle based on the user’s local sunset time
+
+A typical request flow in Unkubed is:
+
+1. the user performs an action in the UI
+2. the app builds the matching allowlisted `kubectl` command
+3. the command is executed against the active cluster context
+4. the response is rendered in the UI and recorded in command history
+
+This keeps the application focused on teaching Kubernetes rather than hiding it.
 
 ## Prerequisites
 
@@ -33,10 +42,30 @@ cp .env.example .env
 
 The app defaults to `http://127.0.0.1:5173`.
 
+## Project structure
+
+The backend is intentionally simple and easy to trace:
+
+- `unkubed/__init__.py` boots the Flask app, loads configuration, initializes extensions, and registers blueprints.
+- `unkubed/dashboard/routes.py` contains most of the application logic, including authentication, cluster connection, dashboard views, resource browsing, troubleshooting, command history, and template generation.
+- `unkubed/models.py` contains the SQLAlchemy models for users, clusters, command history, saved templates, and troubleshooting reports.
+- `unkubed/templates/` contains the Jinja templates for the UI.
+- `unkubed/static/` contains the shared CSS, JavaScript, and image assets.
+
+This flatter structure is deliberate: the project is designed to be readable and inspectable for learners rather than heavily abstracted.
+
 ## Running tests
+
+If you are running the app locally in a virtual environment:
 
 ```bash
 pytest
+```
+
+If you are using Docker Compose for the app environment:
+
+```bash
+docker compose exec web pytest
 ```
 
 ## Run everything with Docker
@@ -56,6 +85,8 @@ The compose file:
 - Keeps Postgres in a persistent Docker volume (`postgres-data`).
 
 Access the site at `http://localhost:5173` once the `web` container reports healthy. You can still use `docker compose exec web flask ...` to run management commands inside the container.
+
+For development, most code and template changes should appear after a refresh without rebuilding, because the project directory is mounted into the container.
 
 ## Kubernetes integration notes
 
