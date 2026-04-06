@@ -4,35 +4,35 @@
 <h2>New {{ resource_type }} template</h2>
 <div class="split">
   <div class="card">
-    <form method="post">
+    <form method="post" autocomplete="off">
       {{ form.hidden_tag() }}
       <div>
-        {{ form.name.label }} {{ form.name() }}
+        {{ form.name.label }} {{ form.name(autocomplete="off", autocapitalize="off", autocorrect="off", spellcheck="false") }}
         {% for error in form.name.errors %}
         <small class="text-error">{{ error }}</small>
         {% endfor %}
       </div>
       <div>
-        {{ form.namespace.label }} {{ form.namespace() }}
+        {{ form.namespace.label }} {{ form.namespace(autocomplete="off", autocapitalize="off", autocorrect="off", spellcheck="false") }}
         {% for error in form.namespace.errors %}
         <small class="text-error">{{ error }}</small>
         {% endfor %}
       </div>
       {% if resource_type != "configmap" %}
       <div>
-        {{ form.image.label }} {{ form.image() }}
+        {{ form.image.label }} {{ form.image(autocomplete="off", autocapitalize="off", autocorrect="off", spellcheck="false") }}
         {% for error in form.image.errors %}
         <small class="text-error">{{ error }}</small>
         {% endfor %}
       </div>
       <div>
-        {{ form.replicas.label }} {{ form.replicas() }}
+        {{ form.replicas.label }} {{ form.replicas(autocomplete="off", inputmode="numeric") }}
         {% for error in form.replicas.errors %}
         <small class="text-error">{{ error }}</small>
         {% endfor %}
       </div>
       <div>
-        {{ form.container_port.label }} {{ form.container_port() }}
+        {{ form.container_port.label }} {{ form.container_port(autocomplete="off", inputmode="numeric") }}
         {% for error in form.container_port.errors %}
         <small class="text-error">{{ error }}</small>
         {% endfor %}
@@ -40,19 +40,19 @@
       {% endif %}
       {% if resource_type in ["service"] %}
       <div>
-        {{ form.service_type.label }} {{ form.service_type() }}
+        {{ form.service_type.label }} {{ form.service_type(autocomplete="off") }}
         {% for error in form.service_type.errors %}
         <small class="text-error">{{ error }}</small>
         {% endfor %}
       </div>
       <div>
-        {{ form.service_port.label }} {{ form.service_port() }}
+        {{ form.service_port.label }} {{ form.service_port(autocomplete="off", inputmode="numeric") }}
         {% for error in form.service_port.errors %}
         <small class="text-error">{{ error }}</small>
         {% endfor %}
       </div>
       <div>
-        {{ form.target_port.label }} {{ form.target_port() }}
+        {{ form.target_port.label }} {{ form.target_port(autocomplete="off", inputmode="numeric") }}
         {% for error in form.target_port.errors %}
         <small class="text-error">{{ error }}</small>
         {% endfor %}
@@ -60,7 +60,7 @@
       {% endif %}
       {% if resource_type == "configmap" %}
       <div>
-        {{ form.config_data.label }} {{ form.config_data(rows=5) }}
+        {{ form.config_data.label }} {{ form.config_data(rows=5, autocomplete="off", autocapitalize="off", autocorrect="off", spellcheck="false") }}
         {% for error in form.config_data.errors %}
         <small class="text-error">{{ error }}</small>
         {% endfor %}

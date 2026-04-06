@@ -3,28 +3,28 @@
 {% block content %}
 <div class="card">
   <h2>Create an account</h2>
-  <form method="post">
+  <form method="post" autocomplete="off">
     {{ form.hidden_tag() }}
     <div>
-      {{ form.full_name.label }} {{ form.full_name() }}
+      {{ form.full_name.label }} {{ form.full_name(autocomplete="off", autocapitalize="words", autocorrect="off", spellcheck="false") }}
       {% for error in form.full_name.errors %}
       <small class="text-error">{{ error }}</small>
       {% endfor %}
     </div>
     <div>
-      {{ form.email.label }} {{ form.email() }}
+      {{ form.email.label }} {{ form.email(autocomplete="off", autocapitalize="off", autocorrect="off", spellcheck="false") }}
       {% for error in form.email.errors %}
       <small class="text-error">{{ error }}</small>
       {% endfor %}
     </div>
     <div>
-      {{ form.password.label }} {{ form.password() }}
+      {{ form.password.label }} {{ form.password(autocomplete="new-password", autocapitalize="off", autocorrect="off", spellcheck="false") }}
       {% for error in form.password.errors %}
       <small class="text-error">{{ error }}</small>
       {% endfor %}
     </div>
     <div>
-      {{ form.confirm_password.label }} {{ form.confirm_password() }}
+      {{ form.confirm_password.label }} {{ form.confirm_password(autocomplete="new-password", autocapitalize="off", autocorrect="off", spellcheck="false") }}
       {% for error in form.confirm_password.errors %}
       <small class="text-error">{{ error }}</small>
       {% endfor %}

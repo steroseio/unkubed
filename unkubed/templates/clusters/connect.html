@@ -11,23 +11,23 @@
 <div class="split">
   <div class="card">
     <h3>New connection</h3>
-    <form method="post">
+    <form method="post" autocomplete="off">
       {{ form.hidden_tag() }}
       <div>
-        {{ form.nickname.label }} {{ form.nickname() }}
+        {{ form.nickname.label }} {{ form.nickname(autocomplete="off", autocapitalize="off", autocorrect="off", spellcheck="false") }}
         {% for error in form.nickname.errors %}
         <small class="text-error">{{ error }}</small>
         {% endfor %}
       </div>
       <div>
-        {{ form.kubeconfig_path.label }} {{ form.kubeconfig_path() }}
+        {{ form.kubeconfig_path.label }} {{ form.kubeconfig_path(autocomplete="off", autocapitalize="off", autocorrect="off", spellcheck="false") }}
         {% for error in form.kubeconfig_path.errors %}
         <small class="text-error">{{ error }}</small>
         {% endfor %}
       </div>
       {% if contexts %}
       <div>
-        {{ form.context_name.label }} {{ form.context_name() }}
+        {{ form.context_name.label }} {{ form.context_name(autocomplete="off") }}
         {% for error in form.context_name.errors %}
         <small class="text-error">{{ error }}</small>
         {% endfor %}
@@ -37,7 +37,7 @@
       <p class="text-error">No contexts were detected at the provided kubeconfig path. Enter a context manually below.</p>
       {% endif %}
       <div>
-        {{ form.manual_context.label }} {{ form.manual_context() }}
+        {{ form.manual_context.label }} {{ form.manual_context(autocomplete="off", autocapitalize="off", autocorrect="off", spellcheck="false") }}
         {% for error in form.manual_context.errors %}
         <small class="text-error">{{ error }}</small>
         {% endfor %}
@@ -59,12 +59,12 @@
         </div>
         <div class="cluster-actions">
           {% if not (active_cluster and cluster.id == active_cluster.id) %}
-          <form method="post" action="{{ url_for('clusters.activate', cluster_id=cluster.id) }}">
+          <form method="post" action="{{ url_for('clusters.activate', cluster_id=cluster.id) }}" autocomplete="off">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button class="btn btn-ghost" type="submit">Activate</button>
           </form>
           {% endif %}
-          <form method="post" action="{{ url_for('clusters.delete', cluster_id=cluster.id) }}" onsubmit="return confirm('Delete {{ cluster.nickname }}?');">
+          <form method="post" action="{{ url_for('clusters.delete', cluster_id=cluster.id) }}" onsubmit="return confirm('Delete {{ cluster.nickname }}?');" autocomplete="off">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button class="btn btn-danger" type="submit">Delete</button>
           </form>
