@@ -2,9 +2,9 @@
 
 {% block content %}
 <section class="features-hero">
-  <p class="eyebrow gradient-text">Unkubed capabilities</p>
-  <h1><span class="gradient-text">Features that map UI to kubectl</span></h1>
-  <p>Every screen is designed to teach Kubernetes fundamentals through clear visuals, gradients inspired by the cluster nebula, and annotated screenshots.</p>
+  <p class="eyebrow gradient-text">Feature overview</p>
+  <h1><span class="gradient-text">Pages that map UI to kubectl</span></h1>
+  <p>These screens focus on showing Kubernetes resources, the commands behind them, and the supporting YAML or troubleshooting context.</p>
 </section>
 
 <section class="features-section">
@@ -19,16 +19,16 @@
     </div>
     <div class="feature-card">
       <i class="mdi mdi-file-code-outline"></i>
-      <h3>Template studio</h3>
-      <p>Generate deployment, service, and config map YAML with smart defaults, preview the manifest, and see the matching apply workflow.</p>
+      <h3>Template builder</h3>
+      <p>Generate deployment, service, and config map YAML, preview the manifest, and apply it from the UI when a cluster is connected.</p>
       <div class="screenshot-frame">
         <img src="{{ url_for('static', filename='img/templates-placeholder.svg') }}" alt="Template screenshot" />
       </div>
     </div>
     <div class="feature-card">
       <i class="mdi mdi-heart-pulse"></i>
-      <h3>Pod health insights</h3>
-      <p>Combine events, logs, and restart counts into gradient-highlighted diagnostics that suggest the next command or probe to inspect.</p>
+      <h3>Pod troubleshooting</h3>
+      <p>Combine events, logs, and restart counts into a short troubleshooting summary with suggested next checks.</p>
       <div class="screenshot-frame">
         <img src="{{ url_for('static', filename='img/pod-detail-placeholder.svg') }}" alt="Pod detail screenshot" />
       </div>
@@ -41,17 +41,17 @@
     <div class="feature-card">
       <i class="mdi mdi-history"></i>
       <h3>Command history</h3>
-      <p>Unkubed stores the gradient-highlighted commands you triggered along with success status and timestamps for future study.</p>
+      <p>Stores the commands triggered through the interface along with their status, output, and timestamps.</p>
     </div>
     <div class="feature-card">
       <i class="mdi mdi-account-key"></i>
-      <h3>Safe cluster connections</h3>
-      <p>Read-only flows grounded in your kubeconfig ensure clarity without risking a production cluster.</p>
+      <h3>Cluster connections</h3>
+      <p>Lets the user save kubeconfig and context combinations and switch the active connection from the UI.</p>
     </div>
     <div class="feature-card">
-      <i class="mdi mdi-weather-night"></i>
-      <h3>Sunset-aware theming</h3>
-      <p>Automatic light-to-dark transitions follow local sunset times, keeping late-night study sessions comfortable.</p>
+      <i class="mdi mdi-file-document-outline"></i>
+      <h3>Saved templates</h3>
+      <p>Keeps generated manifests in the database so they can be revisited and reused later.</p>
     </div>
   </div>
 </section>

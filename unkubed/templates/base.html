@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,9 +25,6 @@
         <a href="{{ url_for('auth.register') }}">Register</a>
         {% endif %}
       </nav>
-      <button class="theme-toggle" id="themeToggle" type="button">
-        Toggle Theme
-      </button>
     </header>
     <div class="container">
       {% with messages = get_flashed_messages(with_categories=true) %}
@@ -45,7 +42,6 @@
     <script>
       document.getElementById("currentYear").textContent = new Date().getFullYear();
     </script>
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     {% block scripts %}{% endblock %}
   </body>
 </html>

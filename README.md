@@ -1,6 +1,6 @@
 # Unkubed
 
-Unkubed is a Flask-based learning companion that helps users understand Kubernetes by lining up the UI, the generated YAML, the exact `kubectl` command, and the resulting cluster state. The MVP focuses on safe, read-heavy workflows so learners can explore Minikube or any kubeconfig-backed cluster with confidence.
+Unkubed is a Flask-based web application for learning Kubernetes by lining up the UI, the generated YAML, the exact `kubectl` command, and the resulting cluster state. The MVP focuses on read-heavy workflows so users can explore Minikube or any kubeconfig-backed cluster with less guesswork.
 
 ## Features
 
@@ -9,7 +9,7 @@ Unkubed is a Flask-based learning companion that helps users understand Kubernet
 - Resource browsers for namespaces, pods (with troubleshooting summaries + logs), deployments, and services
 - YAML template generator for Deployments, Services, and ConfigMaps with the matching `kubectl apply` command
 - Command history ledger stored in Postgres
-- Modern UI with a hero landing page plus dark/light themes that auto-toggle based on the user’s local sunset time
+- Clean UI with dashboard, resource, troubleshooting, and template pages
 
 A typical request flow in Unkubed is:
 
@@ -52,7 +52,49 @@ The backend is intentionally simple and easy to trace:
 - `unkubed/templates/` contains the Jinja templates for the UI.
 - `unkubed/static/` contains the shared CSS, JavaScript, and image assets.
 
-This flatter structure is deliberate: the project is designed to be readable and inspectable for learners rather than heavily abstracted.
+This flatter structure is deliberate: the project is meant to be readable and easy to trace rather than heavily abstracted.
+
+## File guide
+
+- `unkubed/__init__.py`: Boots the Flask app, loads configuration, initializes extensions, registers blueprints, and wires the login manager and shell context.
+- `unkubed/dashboard/routes.py`: Holds most of the application logic, including the landing pages, auth flow, cluster connection, dashboard views, resource browsing, command history, troubleshooting logic, template generation, and the allowlisted `kubectl` execution helpers.
+- `unkubed/models.py`: Defines the SQLAlchemy models for users, saved cluster connections, command history, saved templates, and troubleshooting reports.
+- `wsgi.py`: Exposes the Flask application object for production-style servers such as Gunicorn.
+- `compose.yml`: Defines the local Docker Compose stack for the web app and Postgres, including mounts, environment variables, and the startup command.
+- `Dockerfile`: Builds the application image with Python, the app dependencies, and the runtime setup used by the `web` service.
+- `.env.example`: Provides the sample environment variables needed for local development and Docker-based setup.
+- `pyproject.toml`: Defines the project metadata and Python dependencies needed to install and run Unkubed.
+- `alembic.ini`: Configures Alembic so database migrations can run against the app’s SQLAlchemy models.
+- `migrations/env.py`: Connects Alembic to the Flask app and database metadata so migration scripts can be generated and applied.
+- `migrations/script.py.mako`: Provides the template Alembic uses when creating new migration files.
+- `scripts/check_docker.sh`: Verifies that Docker is installed and available before trying to start the local stack.
+- `scripts/start_db.sh`: Starts the local Postgres service using Docker Compose.
+- `scripts/run_migrations.sh`: Runs the database migrations so the schema is up to date before the app starts.
+- `scripts/run_app.sh`: Launches the Flask development server for local non-Docker development.
+- `scripts/docker-entrypoint.sh`: Prepares the container runtime, runs migrations, and starts the web server when the Docker app container boots.
+- `scripts/prepare_kubeconfig.py`: Creates the Docker-friendly kubeconfig copy used inside the container so the app can talk to Minikube without manual edits.
+- `tests/conftest.py`: Provides the shared pytest fixtures for creating the Flask app, test client, and temporary test database.
+- `tests/test_app_factory.py`: Checks that the Flask app boots with the testing configuration and registers the expected routes.
+- `tests/test_auth.py`: Covers the basic user registration and login flow.
+- `tests/test_services.py`: Verifies the helper that builds the base `kubectl` command from the active cluster configuration.
+- `tests/test_templates.py`: Tests YAML template generation and the flow that applies a generated manifest against the active cluster.
+- `tests/test_troubleshooting.py`: Exercises the rule-based pod troubleshooting summary logic for common failure cases.
+- `unkubed/templates/base.html`: Defines the shared page layout, navigation, footer, and flash messages used across the site.
+- `unkubed/templates/main/index.html`: Renders the landing page introduction and preview screenshots.
+- `unkubed/templates/main/features.html`: Presents the feature overview page for the main parts of the app.
+- `unkubed/templates/auth/login.html`: Renders the sign-in form for returning users.
+- `unkubed/templates/auth/register.html`: Renders the account creation form for new users.
+- `unkubed/templates/clusters/connect.html`: Renders the cluster connection form plus the saved cluster list with activate and delete actions.
+- `unkubed/templates/dashboard/index.html`: Renders the main dashboard with cluster summary metrics and recent command history.
+- `unkubed/templates/commands/history.html`: Renders the full command history view with expandable command output and status information.
+- `unkubed/templates/resources/pods.html`: Renders the pod list view with status, restart counts, and links to pod inspection pages.
+- `unkubed/templates/resources/pod_detail.html`: Renders the pod inspection page with metadata, events, logs, troubleshooting output, and supporting `kubectl` commands.
+- `unkubed/templates/resources/namespaces.html`: Renders the namespace list view and the command used to retrieve it.
+- `unkubed/templates/resources/deployments.html`: Renders the deployment list view with rollout and readiness information.
+- `unkubed/templates/resources/services.html`: Renders the service list view with type, cluster IP, and exposed port information.
+- `unkubed/templates/templates/list.html`: Renders the saved template library and links to create new deployment, service, and ConfigMap templates.
+- `unkubed/templates/templates/new.html`: Renders the template builder form, generated YAML preview, and apply result output for new manifests.
+- `unkubed/static/css/main.css`: Contains the shared visual design system, layout rules, resource table styling, terminal-style panels, and theme-aware colors.
 
 ## Running tests
 
@@ -94,7 +136,3 @@ For development, most code and template changes should appear after a refresh wi
 - Only an allowlisted set of read operations (`get`, `logs`, and relevant `events`) are executed.
 - Cluster connections are stored per-user; activating one automatically deactivates the previous.
 - Commands and troubleshooting summaries are recorded in Postgres for review under `/commands/history`.
-
-## Dark/light theme toggle
-
-The UI ships with a manual theme switch plus a sunset-aware auto toggle. When the page loads it asks the browser for geolocation, fetches the local sunset time from [sunrise-sunset.org](https://sunrise-sunset.org/), and flips to the dark palette at sunset unless the user has manually chosen a theme. The result is an opinionated but calm teaching interface suitable for evening study sessions.
