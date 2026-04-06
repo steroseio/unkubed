@@ -400,6 +400,49 @@ nav a.active {
   border-color: rgba(148, 163, 184, 0.22);
 }
 
+.cluster-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cluster-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.cluster-list-item:last-child {
+  border-bottom: none;
+}
+
+.cluster-list-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.cluster-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-shrink: 0;
+}
+
+.cluster-actions form {
+  margin: 0;
+}
+
+.btn-compact {
+  min-height: 2.2rem;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.86rem;
+}
+
 .stat {
   font-size: 2.5rem;
   font-weight: 700;

@@ -51,7 +51,7 @@
     <ul class="cluster-list">
       {% for cluster in clusters %}
       <li class="cluster-list-item">
-        <div>
+        <div class="cluster-list-label">
           <strong>{{ cluster.nickname }}</strong> — {{ cluster.context_name }}
           {% if active_cluster and cluster.id == active_cluster.id %}
           <span class="status-badge is-active">Active</span>
@@ -66,7 +66,7 @@
           {% endif %}
           <form method="post" action="{{ url_for('clusters.delete', cluster_id=cluster.id) }}" onsubmit="return confirm('Delete {{ cluster.nickname }}?');" autocomplete="off">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button class="btn btn-danger" type="submit">Delete</button>
+            <button class="btn btn-danger btn-compact" type="submit">Delete</button>
           </form>
         </div>
       </li>
