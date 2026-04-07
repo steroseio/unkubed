@@ -2,6 +2,10 @@
 
 Unkubed is a Flask-based web application for learning Kubernetes by lining up the UI, the generated YAML, the exact `kubectl` command, and the resulting cluster state. The MVP focuses on read-heavy workflows so users can explore Minikube or any kubeconfig-backed cluster with less guesswork.
 
+## Video Demo URL
+
+https://www.youtube.com/watch?v=LvSYcFLOZEU
+
 ## Features
 
 - Flask application factory with SQLAlchemy, Alembic migrations, Flask-Login auth, and Dockerized Postgres
@@ -51,8 +55,6 @@ The backend is intentionally simple and easy to trace:
 - `unkubed/models.py` contains the SQLAlchemy models for users, clusters, command history, saved templates, and troubleshooting reports.
 - `unkubed/templates/` contains the Jinja templates for the UI.
 - `unkubed/static/` contains the shared CSS, JavaScript, and image assets.
-
-This flatter structure is deliberate: the project is meant to be readable and easy to trace rather than heavily abstracted.
 
 ## File guide
 
@@ -136,3 +138,24 @@ For development, most code and template changes should appear after a refresh wi
 - Only an allowlisted set of read operations (`get`, `logs`, and relevant `events`) are executed.
 - Cluster connections are stored per-user; activating one automatically deactivates the previous.
 - Commands and troubleshooting summaries are recorded in Postgres for review under `/commands/history`.
+
+## Design choices
+
+I began with the idea of multiple route.py files for each different service path, based on best practice design videos I had been watching before beginning the project. However, in the end, I flattened almost everything into `unkubed/dashboard/routes.py`. I felt that grouping the application logic like this meant it would be easier to understand for a new engineer looking to investigate the application.
+
+I reviewed but did not use the Kubernetes Python client. The app is supposed to surface the real `kubectl` commands, however the client was threatening to obfuscate a lot of that useful information, and risking the purpose of the app, which is to educate the user on Kubernetes.
+
+Architecturally I also thought in detail about what exactly should be stored in PostgreSQL. In the end I settled on App state but not Cluster state, to keep the database focused on:
+
+- users
+- saved clusters
+- command history
+- stored templates
+- troubleshooting reports
+
+This allowed the cluster itself (and the commands ran by the app) to be the source of truth, and keep the database relatively light.
+
+## AI assistance
+
+- I am not great at front end design! Accordingly I built functional Jinja templates and then provided detailed prompts to AI in Study mode, to outline the kind of layout and look I was aiming for. From there we pair programmed to produce the look of the web app.
+- I also used AI to discover SQLAlchemy. I was searching for a tool that could build table definitions from Python classes and came across this. In addition to the core function I needed, it also handled connections to the database, translating model operations into valid SQL, and turning database rows back into Python objects with ease. I'm very happy to have this in my toolkit going forwards as it saved me a lot of time by avoiding writing SQL boilerplate.
