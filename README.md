@@ -145,7 +145,7 @@ I began with the idea of multiple route.py files for each different service path
 
 I reviewed but did not use the Kubernetes Python client. The app is supposed to surface the real `kubectl` commands, however the client was threatening to obfuscate a lot of that useful information, and risking the purpose of the app, which is to educate the user on Kubernetes.
 
-Architecturally I also thought in detail about what exactly should be stored in PostgreSQL. In the end I settled on App state but not Cluster state, to keep the database focused on:
+Architecturally I also thought in detail about what exactly should be stored in PostgreSQL. In the end I settled on app state but not cluster state, to keep the database focused on:
 
 - users
 - saved clusters
@@ -153,9 +153,9 @@ Architecturally I also thought in detail about what exactly should be stored in 
 - stored templates
 - troubleshooting reports
 
-This allowed the cluster itself (and the commands ran by the app) to be the source of truth, and keep the database relatively light.
+This allowed the cluster itself, along with the commands run by the app, to remain the source of truth and kept the database relatively light.
 
 ## AI assistance
 
-- I am not great at front end design! Accordingly I built functional Jinja templates and then provided detailed prompts to AI in Study mode, to outline the kind of layout and look I was aiming for. From there we pair programmed to produce the look of the web app.
-- I also used AI to discover SQLAlchemy. I was searching for a tool that could build table definitions from Python classes and came across this. In addition to the core function I needed, it also handled connections to the database, translating model operations into valid SQL, and turning database rows back into Python objects with ease. I'm very happy to have this in my toolkit going forwards as it saved me a lot of time by avoiding writing SQL boilerplate.
+- I am not great at frontend design! Accordingly I built functional Jinja templates and then provided detailed prompts to AI in Study mode, to outline the kind of layout and look I was aiming for. From there we pair programmed to produce the look of the web app.
+- I also used AI to discover SQLAlchemy. I was searching for a tool that could build table definitions from Python classes and came across this. In addition to the core function I needed, it also handled connections to the database, translated model operations into valid SQL, and turned database rows back into Python objects with ease. I'm very happy to have this in my toolkit going forward because it saved me a lot of time by avoiding SQL boilerplate.
